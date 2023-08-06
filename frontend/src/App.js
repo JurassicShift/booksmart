@@ -1,10 +1,13 @@
 
-import './App.css';
+import './styles/css/index.css';
 
 function App() {
   return (
-    <div className="App">
-        <p>Hello Dave</p>
+    <div className="app">
+      <div className="app__bgColour">
+        <h1>BookSmart</h1>
+      </div>
+    
     </div>
   );
 }

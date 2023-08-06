@@ -1,0 +1,29 @@
+// variables and functions
+
+@import 'variables';
+
+// base and layout
+
+@import 'base';
+
+// colours
+
+
+// components (buttons, cards, navbar)
+
+
+// utilites (marging, padding, opacity)
+
+p {
+    color: map-get($colour-palette, "base");
+}
+
+h1 {
+    color: map-get($colour-palette, "text");
+    font-size: 2rem;
+    letter-spacing: 1px;
+    a {
+        color: green;
+    }
+}
+

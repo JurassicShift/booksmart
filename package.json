@@ -6,7 +6,8 @@
   "scripts": {
     "server": "nodemon server.js",
     "client": "npm start --prefix frontend",
-    "dev": "concurrently \"npm run server\" \"npm run client\""
+    "gulp": "npx gulp --gulpfile frontend/gulpfile.js",
+    "dev": "concurrently \"npm run server\" \"npm run client\" \"npm run gulp\""
   },
   "repository": {
     "type": "git",

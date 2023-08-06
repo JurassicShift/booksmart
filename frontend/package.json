@@ -1,6 +1,7 @@
 {
   "name": "booksmart",
   "version": "0.1.0",
+  "type": "module",
   "private": true,
   "dependencies": {
     "@reduxjs/toolkit": "^1.9.5",
@@ -38,5 +39,11 @@
       "last 1 safari version"
     ],
     "proxy": "http://localhost:5000"
+  },
+  "devDependencies": {
+    "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
+    "gulp": "^4.0.2",
+    "gulp-sass": "^5.1.0",
+    "sass": "^1.64.2"
   }
 }
