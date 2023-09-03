@@ -1,15 +1,31 @@
-$base-colour: #5c8c6c;
-
 $colour-palette: (
     "base": #5c8c6c,
     "dark": #212121,
-    "dark-one": #34463c,
-    "dark-two": #3e4e45,
-    "dark-three": #324434,
+    "dark-1": #34463c,
+    "dark-2": #3e4e45,
+    "dark-3": #324434,
     "light":  #c9d3cc,
-    "light-one": #95af9f,
-    "light-two": #a9c4b3,
-    "light-three": #acc4bc,
+    "light-1": #95af9f,
+    "light-2": #a9c4b3,
+    "light-3": #acc4bc,
     "text": #fff,
 ); 
 
+$base-colour: #5c8c6c;
+$base-text: #fff;
+$dark-text: #212121;
+$sub-text: #565e64;
+$base-btn-colour: #95af9f;
+
+$tabs-mg: 5px;
+
+@mixin flex-column-center {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  };
+
+  @mixin flex-row-center($justify:center) {
+    display: flex;
+    justify-content: $justify;
+  }

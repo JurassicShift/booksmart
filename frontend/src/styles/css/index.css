@@ -6,18 +6,75 @@ Author: Richard Clark - http://richclarkdesign.com
 Twitter: @rich_clark
 */
 @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600&display=swap");
-html, body, div, span, object, iframe,
-h1, h2, h3, h4, h5, h6, p, blockquote, pre,
-abbr, address, cite, code,
-del, dfn, em, img, ins, kbd, q, samp,
-small, strong, sub, sup, var,
-b, i,
-dl, dt, dd, ol, ul, li,
-fieldset, form, label, legend,
-table, caption, tbody, tfoot, thead, tr, th, td,
-article, aside, canvas, details, figcaption, figure,
-footer, header, hgroup, menu, nav, section, summary,
-time, mark, audio, video {
+html,
+body,
+div,
+span,
+object,
+iframe,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+blockquote,
+pre,
+abbr,
+address,
+cite,
+code,
+del,
+dfn,
+em,
+img,
+ins,
+kbd,
+q,
+samp,
+small,
+strong,
+sub,
+sup,
+var,
+b,
+i,
+dl,
+dt,
+dd,
+ol,
+ul,
+li,
+fieldset,
+form,
+label,
+legend,
+table,
+caption,
+tbody,
+tfoot,
+thead,
+tr,
+th,
+td,
+article,
+aside,
+canvas,
+details,
+figcaption,
+figure,
+footer,
+header,
+hgroup,
+menu,
+nav,
+section,
+summary,
+time,
+mark,
+audio,
+video {
   margin: 0;
   padding: 0;
   border: 0;
@@ -31,8 +88,17 @@ body {
   line-height: 1;
 }
 
-article, aside, details, figcaption, figure,
-footer, header, hgroup, menu, nav, section {
+article,
+aside,
+details,
+figcaption,
+figure,
+footer,
+header,
+hgroup,
+menu,
+nav,
+section {
   display: block;
 }
 
@@ -40,12 +106,15 @@ nav ul {
   list-style: none;
 }
 
-blockquote, q {
+blockquote,
+q {
   quotes: none;
 }
 
-blockquote:before, blockquote:after,
-q:before, q:after {
+blockquote:before,
+blockquote:after,
+q:before,
+q:after {
   content: "";
   content: none;
 }
@@ -77,7 +146,8 @@ del {
   text-decoration: line-through;
 }
 
-abbr[title], dfn[title] {
+abbr[title],
+dfn[title] {
   border-bottom: 1px dotted;
   cursor: help;
 }
@@ -97,40 +167,356 @@ hr {
   padding: 0;
 }
 
-input, select {
+input,
+select {
   vertical-align: middle;
 }
 
+@font-face {
+  font-family: "SmartFont";
+  src: url("../../fonts/Quinsi.ttf") format("truetype");
+}
+@font-face {
+  font-family: "SubFont";
+  src: url("../../fonts/Streetwear.otf") format("truetype");
+}
 body {
   font-family: "Poppins", sans-serif;
-  background-image: url("../../imgs/bgimg2.jpg");
-  background-position: center;
+  background-color: #5c8c6c;
   color: #fff;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+body::-webkit-scrollbar {
+  width: 0.4em;
+}
+
+body::-webkit-scrollbar-track {
+  background-color: #cccccc;
+}
+
+body::-webkit-scrollbar-thumb {
+  background-color: #6c757d;
+  border-radius: 0.25em;
+}
+
+body::-webkit-scrollbar-thumb:hover {
+  background-color: #555;
 }
 
 .app {
+  height: 100vh;
+  width: 100vw;
+}
+
+.app__title {
+  display: flex;
+}
+
+.app__title-font {
+  font-family: SmartFont;
+}
+
+.app__title-icons {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.app__header {
+  display: flex;
+  flex-direction: column;
+  margin-left: 20px;
+}
+.app__header p {
+  line-height: 18px;
+  letter-spacing: 0.5px;
+}
+
+.app__parent {
+  height: auto;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.app__main {
+  height: 100%;
+  width: 100%;
+  background-color: #fff;
+}
+
+.app__main-btn {
+  display: flex;
+  justify-content: space-between;
+}
+
+.app__tabs {
   display: flex;
   justify-content: center;
-  align-items: center;
-  height: 100vh;
+  margin-top: 10px;
 }
 
-.app__bgColour {
-  background-color: #5c8c6c;
-  height: calc(100vh - 50px);
-  width: calc(100vw - 50px);
-  border-radius: 4px;
+.app__main-view {
+  position: relative;
 }
 
-p {
+.login__title {
+  width: 100%;
+  height: 38px;
+  display: flex;
+  justify-content: flex-start;
+  margin-bottom: 20px;
+}
+.login__title h1 {
+  line-height: 54px;
+  font-family: SubFont;
+  color: #565e64;
+  position: relative;
+}
+
+.app__sub-font {
+  font-family: SubFont;
+  color: #565e64;
+}
+
+.login__container {
+  background-color: #fff;
+  position: absolute;
+  top: -5px;
+  width: 100%;
+  height: 100%;
+  z-index: 99;
+}
+
+.active {
+  animation: slideIn 0.4s ease-out forwards;
+}
+
+.notActive {
+  animation: slideOut 0.4s ease-out forwards;
+}
+
+@keyframes slideIn {
+  0% {
+    transform: translateX(100%);
+  }
+  100% {
+    transform: translateX(0%);
+  }
+}
+@keyframes slideOut {
+  0% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+.login__btn {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.text-base {
   color: #5c8c6c;
 }
 
-h1 {
-  color: #fff;
-  font-size: 2rem;
-  letter-spacing: 1px;
+.bg-colour-base {
+  background-color: #5c8c6c;
 }
-h1 a {
-  color: green;
+
+.text-dark {
+  color: #212121;
+}
+
+.bg-colour-dark {
+  background-color: #212121;
+}
+
+.text-dark-1 {
+  color: #34463c;
+}
+
+.bg-colour-dark-1 {
+  background-color: #34463c;
+}
+
+.text-dark-2 {
+  color: #3e4e45;
+}
+
+.bg-colour-dark-2 {
+  background-color: #3e4e45;
+}
+
+.text-dark-3 {
+  color: #324434;
+}
+
+.bg-colour-dark-3 {
+  background-color: #324434;
+}
+
+.text-light {
+  color: #c9d3cc;
+}
+
+.bg-colour-light {
+  background-color: #c9d3cc;
+}
+
+.text-light-1 {
+  color: #95af9f;
+}
+
+.bg-colour-light-1 {
+  background-color: #95af9f;
+}
+
+.text-light-2 {
+  color: #a9c4b3;
+}
+
+.bg-colour-light-2 {
+  background-color: #a9c4b3;
+}
+
+.text-light-3 {
+  color: #acc4bc;
+}
+
+.bg-colour-light-3 {
+  background-color: #acc4bc;
+}
+
+.text-text {
+  color: #fff;
+}
+
+.bg-colour-text {
+  background-color: #fff;
+}
+
+.base-btn {
+  background-color: #95af9f;
+  color: #212121;
+  border-radius: 4px;
+  margin: 10px;
+  transition: all 500ms;
+}
+.base-btn:hover {
+  background-color: #a9c4b3;
+  color: #212121;
+}
+.base-btn .contained-Lt {
+  margin-left: 0px;
+}
+.base-btn .contained-Rt {
+  margin-right: 0px;
+}
+
+@media (max-width: 320px) {
+  .custom-card .card-body {
+    padding: 10px;
+  }
+}
+
+.tab-active {
+  color: #fff;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 500ms;
+  background-color: #5c8c6c;
+}
+.tab-active:hover {
+  background-color: #95af9f;
+  color: #212121;
+}
+.tab-active p {
+  padding: 0.25rem;
+}
+
+.tab-non-active {
+  color: #212121;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 500ms;
+  background-color: #c9d3cc;
+}
+.tab-non-active:hover {
+  background-color: #95af9f;
+  color: #212121;
+}
+.tab-non-active p {
+  padding: 0.25rem;
+}
+
+.base-tab-mg {
+  margin-left: 5px;
+}
+
+.base-logo {
+  height: 45px;
+  width: 45px;
+}
+.base-logo img {
+  height: 45px;
+  width: 45px;
+  margin: 5px;
+}
+
+.data__window {
+  margin-top: 50px;
+}
+
+.data__card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 10px;
+  padding: 30px 10px 15px 10px;
+  border-radius: 4px;
+  width: 80%;
+}
+
+.data__card-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 10px;
+  text-align: center;
+}
+
+.data__card-author {
+  margin-top: 5px;
+}
+
+.data__card-btns {
+  display: flex;
+  justify-content: center;
+}
+
+.layout-left {
+  margin-left: 2rem;
+}
+
+.layout-top {
+  margin-top: 10px;
+}
+
+.layout-bottom {
+  margin-bottom: 15px;
+}
+
+.icon-mg {
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
+.search-mg {
+  margin-left: 10px;
+  margin-right: 10px;
 }

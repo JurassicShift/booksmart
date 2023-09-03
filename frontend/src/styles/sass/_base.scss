@@ -6,130 +6,331 @@ Author: Richard Clark - http://richclarkdesign.com
 Twitter: @rich_clark
 */
 
-html, body, div, span, object, iframe,
-h1, h2, h3, h4, h5, h6, p, blockquote, pre,
-abbr, address, cite, code,
-del, dfn, em, img, ins, kbd, q, samp,
-small, strong, sub, sup, var,
-b, i,
-dl, dt, dd, ol, ul, li,
-fieldset, form, label, legend,
-table, caption, tbody, tfoot, thead, tr, th, td,
-article, aside, canvas, details, figcaption, figure,
-footer, header, hgroup, menu, nav, section, summary,
-time, mark, audio, video {
-    margin:0;
-    padding:0;
-    border:0;
-    outline:0;
-    font-size:100%;
-    vertical-align:baseline;
-    background:transparent;
+html,
+body,
+div,
+span,
+object,
+iframe,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+blockquote,
+pre,
+abbr,
+address,
+cite,
+code,
+del,
+dfn,
+em,
+img,
+ins,
+kbd,
+q,
+samp,
+small,
+strong,
+sub,
+sup,
+var,
+b,
+i,
+dl,
+dt,
+dd,
+ol,
+ul,
+li,
+fieldset,
+form,
+label,
+legend,
+table,
+caption,
+tbody,
+tfoot,
+thead,
+tr,
+th,
+td,
+article,
+aside,
+canvas,
+details,
+figcaption,
+figure,
+footer,
+header,
+hgroup,
+menu,
+nav,
+section,
+summary,
+time,
+mark,
+audio,
+video {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	outline: 0;
+	font-size: 100%;
+	vertical-align: baseline;
+	background: transparent;
 }
 
 body {
-    line-height:1;
+	line-height: 1;
 }
 
-article,aside,details,figcaption,figure,
-footer,header,hgroup,menu,nav,section {
-    display:block;
+article,
+aside,
+details,
+figcaption,
+figure,
+footer,
+header,
+hgroup,
+menu,
+nav,
+section {
+	display: block;
 }
 
 nav ul {
-    list-style:none;
+	list-style: none;
 }
 
-blockquote, q {
-    quotes:none;
+blockquote,
+q {
+	quotes: none;
 }
 
-blockquote:before, blockquote:after,
-q:before, q:after {
-    content:'';
-    content:none;
+blockquote:before,
+blockquote:after,
+q:before,
+q:after {
+	content: '';
+	content: none;
 }
 
 a {
-    margin:0;
-    padding:0;
-    font-size:100%;
-    vertical-align:baseline;
-    background:transparent;
+	margin: 0;
+	padding: 0;
+	font-size: 100%;
+	vertical-align: baseline;
+	background: transparent;
 }
 
 /* change colours to suit your needs */
 ins {
-    background-color:#ff9;
-    color:#000;
-    text-decoration:none;
+	background-color: #ff9;
+	color: #000;
+	text-decoration: none;
 }
 
 /* change colours to suit your needs */
 mark {
-    background-color:#ff9;
-    color:#000;
-    font-style:italic;
-    font-weight:bold;
+	background-color: #ff9;
+	color: #000;
+	font-style: italic;
+	font-weight: bold;
 }
 
 del {
-    text-decoration: line-through;
+	text-decoration: line-through;
 }
 
-abbr[title], dfn[title] {
-    border-bottom:1px dotted;
-    cursor:help;
+abbr[title],
+dfn[title] {
+	border-bottom: 1px dotted;
+	cursor: help;
 }
 
 table {
-    border-collapse:collapse;
-    border-spacing:0;
+	border-collapse: collapse;
+	border-spacing: 0;
 }
 
 /* change border colour to suit your needs */
 hr {
-    display:block;
-    height:1px;
-    border:0;  
-    border-top:1px solid #cccccc;
-    margin:1em 0;
-    padding:0;
+	display: block;
+	height: 1px;
+	border: 0;
+	border-top: 1px solid #cccccc;
+	margin: 1em 0;
+	padding: 0;
 }
 
-input, select {
-    vertical-align:middle;
+input,
+select {
+	vertical-align: middle;
 }
 
 //============================================================
 
-
-// @use "sass:math";
-
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600&display=swap');
 
+@font-face {
+	font-family: 'SmartFont';
+	src: url('../../fonts/Quinsi.ttf') format('truetype');
+}
+
+@font-face {
+	font-family: 'SubFont';
+	src: url('../../fonts/Streetwear.otf') format('truetype');
+}
 
 body {
-    font-family: 'Poppins', sans-serif;
-    background-image: url('../../imgs/bgimg2.jpg');
-    background-position: center;
-    color: map-get($colour-palette, "text" );
+	font-family: 'Poppins', sans-serif;
+	background-color: $base-colour;
+	color: map-get($colour-palette, 'text');
+	overflow-y: auto;
+	overflow-x: hidden;
 }
 
-$viewport-height: 100vh;
-$viewport-width: 100vw;
-$offset: 50px;
+body::-webkit-scrollbar {
+	width: 0.4em;
+
+  }
+
+  body::-webkit-scrollbar-track {
+	background-color: #cccccc;
+  }
+
+  body::-webkit-scrollbar-thumb {
+	background-color: #6c757d;
+	border-radius: 0.25em;
+  }
+
+  body::-webkit-scrollbar-thumb:hover {
+	background-color: #555;
+  }
 
 .app {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
+	height: 100vh;
+	width: 100vw;
 }
 
-.app__bgColour {
-    background-color: $base-colour;
-    height: calc(#{$viewport-height} - #{$offset});
-    width: calc(#{$viewport-width} - #{$offset});
-    border-radius: 4px;
+.app__title {
+	display: flex;
+}
+
+.app__title-font {
+	font-family: SmartFont;
+}
+
+@mixin app__sub-font {
+	font-family: SubFont;
+	color: $sub-text;
+}
+
+.app__title-icons {
+	width: 100%;
+	display: flex;
+	align-items: center;
+	justify-content: flex-end;
+}
+
+.app__header {
+	display: flex;
+	flex-direction: column;
+	margin-left: 20px;
+	p {
+		line-height: 18px;
+		letter-spacing: 0.5px;
+	}
+}
+
+.app__parent {
+	height: auto;
+	display: flex;
+	justify-content: flex-end;
+	align-items: center;
+}
+
+.app__main {
+	height: 100%;
+	width: 100%;
+	background-color: map-get($colour-palette, 'text');
+}
+
+.app__main-btn {
+    @include flex-row-center(space-between);
+}
+
+.app__tabs {
+	@include flex-row-center;
+    margin-top: 10px;
+}
+
+.app__main-view {
+	position: relative;
+}
+.login__title {
+	width: 100%;
+	height: 38px;
+	@include flex-row-center(flex-start);
+	margin-bottom: 20px;
+
+	h1 {
+		line-height: 54px;
+		@include app__sub-font;
+		position: relative;
+	
+	}
+}
+
+.app__sub-font {
+	@include app__sub-font;
+}
+
+.login__container {
+	background-color: #fff;
+	position: absolute;
+	top: -5px;
+	width: 100%; 
+	height: 100%;
+	z-index: 99;
+}
+
+.active {
+	animation: slideIn 0.4s ease-out forwards;
+}
+
+.notActive {
+	animation: slideOut 0.4s ease-out forwards;
+
+}
+
+@keyframes slideIn {
+	0% {
+		transform: translateX(100%)
+	}
+	100% {
+		transform: translateX(0%)
+
+	}
+}
+
+@keyframes slideOut {
+	0% {
+		transform: translateX(0%)
+	}
+	100% {
+		transform: translateX(100%)
+	}
+}
+
+// .login__title {
+// 	margin-top: 10px;
+// }
+
+.login__btn {
+	@include flex-row-center(flex-end);
 }

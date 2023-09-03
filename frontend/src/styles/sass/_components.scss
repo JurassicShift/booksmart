@@ -1,0 +1,112 @@
+// ============================
+// BUTTONS
+// ============================
+
+.base-btn {
+	background-color: $base-btn-colour;
+	color: $dark-text;
+	border-radius: 4px;
+	margin: 10px;
+	transition: all 500ms;
+	&:hover {
+		background-color: map-get($colour-palette, 'light-2');
+		color: $dark-text;
+	}
+
+	.contained-Lt {
+		margin-left: 0px;
+	}
+
+	.contained-Rt {
+		margin-right: 0px;
+	}
+}
+
+// ============================
+// TABS
+// ============================
+
+$tab-font-sz: 16px;
+
+.custom-card .card-body {
+
+	@include breakpointMax {
+		padding: 10px;
+	}
+  }
+
+@mixin base-tab($my-col: $dark-text, $my-hov-col: $dark-text, $my-a-col: $dark-text) {
+	color: $my-col;
+	font-size: $tab-font-sz;
+	cursor: pointer;
+	transition: all 500ms;
+	&:hover {
+		background-color: map-get($colour-palette, 'light-1');
+		color: $my-hov-col;
+	}
+
+	p {
+		padding: 0.25rem;
+	}
+
+}
+
+.tab-active {
+	@include base-tab($base-text, $dark-text, $base-text );
+	background-color: $base-colour;
+}
+
+.tab-non-active {
+	@include base-tab();
+	background-color: map-get($colour-palette, 'light');
+}
+
+.base-tab-mg {
+	margin-left: $tabs-mg;
+}
+
+// ============================
+// LOGO
+// ============================
+
+.base-logo {
+	height: 45px;
+	width: 45px;
+	img {
+		height: 45px;
+		width: 45px;
+		margin: 5px;
+	}
+}
+
+// ==============================
+// DATA CARDS
+// ==============================
+
+.data__window {
+	margin-top: 50px;
+
+}
+
+  .data__card {
+	@include flex-column-center;
+	margin-top: 10px;
+	padding: 30px 10px 15px 10px;
+	border-radius: 4px;
+	width: 80%;
+}
+
+.data__card-info {
+	@include flex-column-center;
+	margin-top: 10px;
+	text-align: center;
+}
+
+.data__card-author {
+	margin-top: 5px;
+}
+
+.data__card-btns {
+	@include flex-row-center;
+}
+

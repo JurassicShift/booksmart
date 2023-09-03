@@ -4,7 +4,7 @@ const cors = require("cors");
 const path = require('path');
 const app = express();
 // const helmet = require("helmet");
-// const routes = require('./backend/routes/index');
+const routes = require('./backend/routes/index');
 
 const environment = process.env.NODE_ENV || 'development';
 const port = process.env.PORT || 5000;
@@ -18,7 +18,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 // app.use(helmet());
 
-// app.use('/', routes);
+app.use('/', routes);
 
 //Serve Frontend
 

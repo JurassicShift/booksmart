@@ -1,0 +1,30 @@
+$layout-lt-mg: 2rem;
+$layout-tp-mg: 10px;
+$layout-bm-mg: 15px;
+
+.layout-left {
+    margin-left: $layout-lt-mg
+}
+
+.layout-top {
+    margin-top: $layout-tp-mg;
+}
+
+.layout-bottom {
+    margin-bottom: $layout-bm-mg;
+}
+
+$icon-mg: 10px;
+$main-mg: 10px;
+
+
+.icon-mg {
+    margin-left: $icon-mg;
+    margin-right: $icon-mg;
+}
+
+.search-mg {
+    margin-left: $main-mg;
+    margin-right: $main-mg;
+}
+
