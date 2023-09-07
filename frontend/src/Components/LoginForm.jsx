@@ -1,8 +1,13 @@
 import React, { useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { updateLogin } from '../redux/slices/loginSlice';
+import { updateBtnLogin } from '../redux/slices/btnLoginSlice.js';
 import PropTypes from 'prop-types';
 
 
 const Login = ({ active }) => {
+
+	const dispatch = useDispatch();
 
 	const [loginData, setLoginData] = useState({
 		username: '',
@@ -22,13 +27,13 @@ const Login = ({ active }) => {
 		const target = e.target.id;
 		const url = local + target;
 		let payload;
-
+		
 		if(target === "login") {
 			payload = loginData;
 		} else {
 			payload = signupData;
 		}
-
+	
 		try {
 			const response = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json'}, body: JSON.stringify(payload) });
 			if (!response.ok) {
@@ -36,7 +41,12 @@ const Login = ({ active }) => {
 			}
 
 			const rawData = await response.json();
-			console.log("return data:", rawData);
+			const loginData = {
+				active: true,
+				username: rawData.username
+			}
+			dispatch(updateLogin(loginData));
+			dispatch(updateBtnLogin());
 		} catch (error) {
 			console.log('MY BIG ERROR:', error);
 		}

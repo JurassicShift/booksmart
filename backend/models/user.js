@@ -15,6 +15,11 @@ const userSchema = new Schema({
 		type: String,
 		required: [true, 'Password is required!'],
 	},
+	userimage:
+	{
+		url: String,
+		filename: String
+	},
 	userwish: [
 		{
 			type: Schema.Types.ObjectId,
@@ -30,14 +35,16 @@ const userSchema = new Schema({
 });
 
 userSchema.statics.findAndValidate = async function (username, password) {
+
 	const foundUser = await this.findOne({ username });
-	const isValid = await bcrypt.compare(password, foundUser.password);
+	const isValid = await bcrypt.compare(password, foundUser.userpass);
 	return isValid ? foundUser : false;
 };
 
 userSchema.pre('save', async function (next) {
-	if (!this.isModified('password')) return next();
-	this.password = await bcrypt.hash(this.password, 12);
+	
+	if (!this.isModified('userpass')) return next();
+	this.userpass = await bcrypt.hash(this.userpass, 12);
 	next();
 });
 

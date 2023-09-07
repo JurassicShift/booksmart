@@ -49,6 +49,7 @@ db.once('open', () => {
 app.use(cors());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+app.use(session(sessionOptions));
 // app.use(helmet());
 
 app.use('/', routes);

@@ -3,7 +3,6 @@ const { urlSwitch } = require('../helpers/index');
 const User = require('../models/user');
 
 const getBookData = async (req, res) => {
-	
 	const searchTerms = req.query.searchTerms || '';
 	const searchCategory = req.query.searchCategory || '';
 
@@ -30,27 +29,56 @@ const getBookData = async (req, res) => {
 };
 
 const postLogin = async (req, res) => {
-	console.log("login", req.body);
-	const hello = {message: "hello login"}
-	res.send(hello);
-}
+
+	const {username, userpass} = req.body;
+	try {
+		const foundUser = await User.findAndValidate(username, userpass);	
+	
+		if (foundUser) {
+			req.session.isAuthenticated = true;
+		}
+
+		const returnObj = {
+			username: foundUser.username,
+			active: true,
+		};
+		res.status(201).send(returnObj);
+	} catch(e) {
+		res.status(500).send('Error signing up');
+
+	}
+
+
+};
 
 const postSignup = async (req, res) => {
 	const data = req.body;
-	const {userconfirm, ...userdata} = data;
-	console.log("userdata", userdata);
-	if(data.userpass === data.userconfirm) {
-		const user = new User(userdata);
-		await user.save();
-		res.send({"UserCreated:": user});
-	} else {
-		res.send({failed: "password don't match"})
-	}
+	const { userconfirm, ...userdata } = data;
 
-}
+	if (data.userpass === data.userconfirm) {
+
+		try {
+			const user = new User(userdata);
+			const userStatus = await user.save();
+			if (userStatus) {
+				req.session.isAuthenticated = true;
+
+			}
+			const returnObj = {
+				username: userStatus.username,
+				active: true,
+			};
+			res.status(201).send(returnObj);
+		} catch (e) {
+			res.status(500).send('Error signing up');
+		}
+	} else {
+		res.status(401).send('Your information is not correct');
+	}
+};
 
 module.exports = {
 	getBookData,
 	postLogin,
-	postSignup
+	postSignup,
 };

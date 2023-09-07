@@ -2,19 +2,26 @@ import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux'
 import { updateTitle } from '../redux/slices/titleSlice.js';
 import { updateFetchedData } from '../redux/slices/searchCategorySlice.js';
-import LoginForm from './LoginForm.jsx';
-import Btn from './Btn';
+
 
 const FetchedData = () => {
 	const local = 'http://localhost:5000/data';
 
 	const title = useSelector(state => state.title.value);
 	const fetchedData = useSelector(state => state.category.value.data);
-	const activeLogin = useSelector(state => state.login.value);
 	const dispatch = useDispatch();
 
 	const capitalizer = (str) => {
 		return str[0].toUpperCase() + str.slice(1);
+	}
+
+	const handleSelection = (e) => {
+		const selectionType = e.target.getAttribute("data-button-type");
+		const bookId = e.target.getAttribute("data-book-id");
+		const book = fetchedData.filter(book => book.id === bookId);
+		console.log("BOOK", book);
+		console.log("SELECTON:", selectionType);
+		console.log("BOOKID:", bookId);
 	}
 
 	useEffect(() => {
@@ -84,8 +91,8 @@ const FetchedData = () => {
 										</p>
 									</div>
 									<div className="data__card-btns">
-										<Btn btnTitle={'+ Wish'} />
-										<Btn btnTitle={'+ Read'} />
+										<button className='btn base-btn' data-button-type="wish" data-book-id={book.id} onClick={handleSelection}>+ Wish</button>
+										<button className='btn base-btn' data-button-type="read" data-book-id={book.id} onClick={handleSelection}>+ Read</button>
 									</div>
 								</div>
 							</div>

@@ -290,13 +290,22 @@ body::-webkit-scrollbar {
 	@include app__sub-font;
 }
 
-.login__container {
+@mixin side__container {
 	background-color: #fff;
 	position: absolute;
 	top: -5px;
 	width: 100%; 
 	height: 100%;
 	z-index: 99;
+}
+
+.login__container {
+	@include side__container();
+}
+
+.profile__container {
+	@include side__container();
+	
 }
 
 .active {
@@ -329,4 +338,50 @@ body::-webkit-scrollbar {
 
 .login__btn {
 	@include flex-row-center(flex-end);
+}
+
+.profile__main {
+	padding: 30px 20px 10px 20px;
+	margin-top: 20px;
+	margin-bottom: 20px;
+	cursor: pointer;
+	border-radius: 4px;
+	background-color: $card-colour;
+}
+
+.profile__menu {
+	height: 71px;
+}
+
+.profile__img {
+	@include flex-column-center;
+	background: linear-gradient(  $base-colour, $gradient-colour );
+	border-radius: 4px;
+	height: auto;
+	margin-top: 20px;
+	margin-bottom: 10px;
+}
+
+.profile__main-flex {
+	@include flex-row-center(flex-start);
+	// margin-bottom: 10px;
+	
+}
+
+.plus {
+	height: 100%;
+	align-items: center;
+}
+
+.profile__text {
+	margin-left: 15px;
+	line-height: 20px;
+} 
+
+.app__dots {
+	font-size: 30px;
+	color: #6c757d;
+	line-height: 45px;
+	margin-right: 5px;
+	cursor: pointer;
 }
