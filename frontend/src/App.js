@@ -11,29 +11,46 @@ import Logo from './Components/Logo.jsx';
 import FetchedData from './Components/FetchedData.jsx';
 import LoginForm from './Components/LoginForm.jsx';
 import Profile from './Components/Profile.jsx';
+import Toaster from './Components/Toast.jsx';
+import WishReadData from './Components/WishReadData.jsx';
+import Sort from './Components/SortBtns.jsx';
 
 function App() {
 	const { btnLogin } = useSelector(state => state.btnLogin);
 	const buttonTitle = btnLogin ? 'back' : 'login/signup';
-	const activeLogin = useSelector(state => state.login);
+	const activeLogin = useSelector(state => state.login.active);
+	const toast = useSelector(state => state.toast);
+	const wish = useSelector(state => state.wish);
+	const read = useSelector(state => state.read);
+	const tab = useSelector(state => state.tabs.active);
+
+	const toastProps = {
+		active: toast.active,
+		notice: toast.notice,
+		type: toast.type,
+	};
+
 	const dispatch = useDispatch();
 
 	useEffect(() => {
-		if (activeLogin.active) {
+		if (activeLogin) {
 			dispatch(updateBtnLogin);
 		}
-	}, [activeLogin.active, dispatch]);
+	}, [activeLogin, dispatch]);
 
 	return (
 		<Router>
 			<div className="app">
-				<Header login={activeLogin.active} />
+				<Header login={activeLogin} />
 				<div className="app__parent layout-left">
 					<div className="app__main">
 						<div className="app__main-btn mt-2">
 							<Logo />
-							{activeLogin.active ? (
-								<i className="bi bi-three-dots-vertical app__dots" onClick={() => dispatch(updateBtnLogin())}></i>
+							{activeLogin ? (
+								<i
+									className="bi bi-three-dots-vertical app__dots"
+									onClick={() => dispatch(updateBtnLogin())}
+								></i>
 							) : (
 								<Btn
 									btnTitle={buttonTitle}
@@ -45,13 +62,21 @@ function App() {
 						<div className="app__main-view">
 							<SearchTabs />
 							<SearchBar />
-
+								{tab !== 0 && <Sort />}
 							<div className="app__data">
 								<Routes>
-									<Route index element={<FetchedData />}></Route>
+									<Route path="/" element={<FetchedData />}></Route>
+									<Route
+										path="/wish"
+										element={<WishReadData list="Wish" bookData={wish} />}
+									></Route>
+									<Route
+										path="/read"
+										element={<WishReadData list="Read" bookData={read} />}
+									></Route>
 								</Routes>
 							</div>
-							{activeLogin.active ? (
+							{activeLogin ? (
 								<Profile btnActive={btnLogin} />
 							) : (
 								<LoginForm active={btnLogin} />
@@ -59,6 +84,7 @@ function App() {
 						</div>
 					</div>
 				</div>
+				<Toaster {...toastProps} />
 			</div>
 		</Router>
 	);

@@ -17,7 +17,6 @@ export const loginSlice = createSlice({
 			};
 		},
 		resetLogin: state => {
-			console.log("hit reset");
 			return {
 				...state,
 				active: initialState.active,

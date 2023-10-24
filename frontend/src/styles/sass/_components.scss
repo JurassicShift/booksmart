@@ -29,13 +29,16 @@
 $tab-font-sz: 16px;
 
 .custom-card .card-body {
-
 	@include breakpointMax {
 		padding: 10px;
 	}
-  }
+}
 
-@mixin base-tab($my-col: $dark-text, $my-hov-col: $dark-text, $my-a-col: $dark-text) {
+@mixin base-tab(
+	$my-col: $dark-text,
+	$my-hov-col: $dark-text,
+	$my-a-col: $dark-text
+) {
 	color: $my-col;
 	font-size: $tab-font-sz;
 	cursor: pointer;
@@ -48,11 +51,10 @@ $tab-font-sz: 16px;
 	p {
 		padding: 0.25rem;
 	}
-
 }
 
 .tab-active {
-	@include base-tab($base-text, $dark-text, $base-text );
+	@include base-tab($base-text, $dark-text, $base-text);
 	background-color: $base-colour;
 }
 
@@ -85,10 +87,9 @@ $tab-font-sz: 16px;
 
 .data__window {
 	margin-top: 50px;
-
 }
 
-  .data__card {
+.data__card {
 	@include flex-column-center;
 	margin-top: 10px;
 	padding: 30px 10px 15px 10px;
@@ -109,4 +110,63 @@ $tab-font-sz: 16px;
 .data__card-btns {
 	@include flex-row-center;
 }
+
+// ==========================================
+// TOAST
+// ==========================================
+
+.toast {
+	position: fixed;
+	top: 20px;
+	right: 20px;
+	border-radius: 5px;
+}
+
+.toast-header {
+	justify-content: space-between;
+	border-radius: 5px;
+	background-color: transparent;
+	color: white;
+	font-size: 16px;
+}
+
+.toast__section {
+	height: 100%;
+	width: 100%;
+	@include flex-row-center;
+}
+
+.toast__text {
+	width: 100%;
+	@include flex-column-center(flex-start);
+	margin-left: 20px;
+	letter-spacing: 0.5px;
+
+	p:first-child {
+		font-weight: bold;
+		margin-bottom: 5px;
+		font-size: 18px;
+	}
+}
+
+.toast__icon {
+	height: 100%;
+	.bi {
+		font-size: 25px;
+		color: white;
+	}
+}
+
+.badge {
+	--bs-badge-padding-x: 0.80em;
+	--bs-badge-padding-y: 0.40em;
+	--bs-badge-border-radius: 3px;
+	position: relative;
+	top: -25px;
+	left: -15px;
+	background-color: #d28266;
+	padding: var(--bs-badge-padding-y) var(--bs-badge-padding-x);
+	border-radius: var(--bs-badge-border-radius);
+  }
+
 

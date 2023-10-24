@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-export const titleSlice = createSlice({
+export const Slice = createSlice({
   name: 'title',
   initialState: {
     value: 'Genre'
@@ -13,6 +13,6 @@ export const titleSlice = createSlice({
 })
 
 
-export const { updateTitle } = titleSlice.actions;
+export const { updateTitle } = Slice.actions;
 
-export default titleSlice.reducer;
+export default Slice.reducer;

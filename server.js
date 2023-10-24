@@ -7,7 +7,7 @@ const mongoose = require('mongoose');
 const app = express();
 
 // const helmet = require("helmet");
-const routes = require('./backend/routes/index');
+const routes = require('./backend/routes/indexRoute');
 
 const environment = process.env.NODE_ENV || 'development';
 const port = process.env.PORT || 5000;
@@ -30,11 +30,13 @@ const sessionOptions = {
   saveUninitialized: false,
   cookie: {
     httpOnly: true,
-    // secure: true,
+    secure: false,
     expires: Date.now() + 1000 * 60 * 60 * 60 * 24 * 7,
     maxAge: 1000 * 60 * 60 * 60 * 24 * 7,
+    sameSite: 'none'
   },
 };
+
 
 mongoose.connect(dbUrl, {
 	useNewUrlParser: true,
@@ -46,10 +48,16 @@ db.once('open', () => {
 	console.log('Database connected');
 });
 
-app.use(cors());
+app.use(cors({
+  origin: 'http://localhost:3000', 
+  credentials: true,
+}));
+
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+
 app.use(session(sessionOptions));
+
 // app.use(helmet());
 
 app.use('/', routes);

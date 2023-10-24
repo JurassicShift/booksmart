@@ -1,12 +1,21 @@
 import { useSelector, useDispatch } from 'react-redux';
+import {  useLocation, useNavigate } from 'react-router-dom';
 import { resetLogin } from '../redux/slices/loginSlice';
 import { updateBtnLogin } from '../redux/slices/btnLoginSlice.js';
-// import Btn from './Btn';
+import { updateToast } from '../redux/slices/toastSlice';
+import { toastObjFactory } from '../helpers/indexHelpers';
+import { resetWish } from '../redux/slices/wishSlice';
+import { resetRead } from '../redux/slices/readSlice';
+import { updateTabs } from '../redux/slices/tabsSlice';
+
 
 
 const Profile = ({ btnActive, loggedIn }) => {
 	const { username } = useSelector(state => state.login);
 	const dispatch = useDispatch();
+	const navigate = useNavigate();
+	const location = useLocation();
+
 	const imgStyles = {
 		fontSize: '75px',
 		marginTop: '20px',
@@ -20,8 +29,15 @@ const Profile = ({ btnActive, loggedIn }) => {
 	};
 
 	const handleLogOut = () => {
+		dispatch(updateToast(toastObjFactory("information", `Goodbye ${username}`)))
 		dispatch(resetLogin());
 		dispatch(updateBtnLogin());
+		dispatch(resetWish());
+		dispatch(resetRead());
+		if(location.pathname !== "/") {
+			dispatch(updateTabs(0));
+			return navigate("/");
+		}
 	}
 
 	return (
@@ -40,29 +56,29 @@ const Profile = ({ btnActive, loggedIn }) => {
 			<div className="profile__main text-dark">
 				<div className="profile__menu">
 					<div className="profile__main-flex">
-						<i class="bi bi-upload layout-bottom" style={iconStyles}></i>
+						<i className="bi bi-upload layout-bottom" style={iconStyles}></i>
 						<p className="profile__text layout-bottom">Upload Image</p>
 					</div>
 					<div className="profile__main-flex">
-						<i class="bi bi-trash3 layout-bottom" style={iconStyles}></i>
+						<i className="bi bi-trash3 layout-bottom" style={iconStyles}></i>
 						<p className="profile__text layout-bottom">Delete Image</p>
 					</div>
 					<br></br>
 				</div>
 				<div className="profile__menu">
 					<div className="profile__main-flex plus">
-						<i class="bi bi-key layout-bottom" style={iconStyles}></i>
+						<i className="bi bi-key layout-bottom" style={iconStyles}></i>
 						<p className="profile__text layout-bottom">Update Password</p>
 					</div>
 					<br></br>
 				</div>
 				<div className="profile__menu">
 					<div className="profile__main-flex" onClick={handleLogOut}>
-						<i class="bi bi-box-arrow-left layout-bottom" style={iconStyles}></i>
+						<i className="bi bi-box-arrow-left layout-bottom" style={iconStyles}></i>
 						<p className="profile__text layout-bottom">Log Out</p>
 					</div>
 					<div className="profile__main-flex">
-						<i class="bi bi-trash3 layout-bottom" style={iconStyles}></i>
+						<i className="bi bi-trash3 layout-bottom" style={iconStyles}></i>
 						<p className="profile__text layout-bottom">Delete Account</p>
 					</div>
 					<br></br>

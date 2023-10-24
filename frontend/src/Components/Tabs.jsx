@@ -1,16 +1,34 @@
-import { useState, useEffect } from 'react';
-// import { Link } from 'react-router-dom';
+
+import { useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { updateTabs } from '../redux/slices/tabsSlice';
+import { updateToast } from '../redux/slices/toastSlice';
+import { toastObjFactory } from '../helpers/indexHelpers';
+
 
 const Tabs = () => {
 	const routes = ['Home', 'Wish', 'Read'];
-	const [active, setActive] = useState(0);
+	const navigate = useNavigate();
+	const dispatch = useDispatch();
+	const active = useSelector(state => state.tabs.active);
+	const login = useSelector(state => state.login.active);
+	const read = useSelector(state => state.read);
+	const r = read.length;
+	const wish = useSelector(state => state.wish);
+	const w = wish.length;
+	const home = useSelector(state => state.category.data);
+	const h = home.length;
 
-	useEffect(() => {
-		console.log('Active:', active);
-	});
 
 	const handleActive = num => {
-		setActive(num);
+		if(!login) {
+			return dispatch(updateToast(toastObjFactory("information", `Please login to use ${routes[num]}`)))
+		}
+		dispatch(updateTabs(num));
+		if(num === 0) {
+			return navigate("/");
+		}
+		navigate("/" + routes[num].toLowerCase());
 	};
 
 	const margAdder = {
@@ -19,16 +37,22 @@ const Tabs = () => {
 
 	const newTabs = routes.map((route, idx) => {
 		return (
+			<>
+			
 			<div
 				className={active === idx ? 'card tab-active custom-card' : 'card tab-non-active custom-card'}
 				onClick={() => handleActive(idx)}
 				style={idx !== 0 ? margAdder : null}
 				key={idx}
 			>
+			
 				<div className="card-body d-flex flex-column justify-content-end">
+				
 					<p className="card-text">{route}</p>
 				</div>
 			</div>
+			{ <span className="badge">{idx === 0 && h }{idx === 1 && w}{idx === 2 && r}</span>}
+			</>
 		);
 	});
 	return newTabs;

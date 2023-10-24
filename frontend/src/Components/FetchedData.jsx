@@ -1,49 +1,93 @@
 import React, { useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import { updateTitle } from '../redux/slices/titleSlice.js';
-import { updateFetchedData } from '../redux/slices/searchCategorySlice.js';
+import { updateFetchedData, removeDataItem } from '../redux/slices/searchCategorySlice.js';
+import { bookObjFactory, fetcher, capitalizer, toastObjFactory, dateProducer } from '../helpers/indexHelpers.js';
+import { updateToast } from '../redux/slices/toastSlice.js';
+import { addBook } from '../redux/slices/wishSlice.js';
+import { addReadBook } from '../redux/slices/readSlice.js';
+import { updateTabs } from '../redux/slices/tabsSlice.js';
+
 
 
 const FetchedData = () => {
-	const local = 'http://localhost:5000/data';
 
 	const title = useSelector(state => state.title.value);
-	const fetchedData = useSelector(state => state.category.value.data);
+	const fetchedData = useSelector(state => state.category.data);
+	const loggedIn = useSelector(state => state.login.active);
+
+	const navigate = useNavigate();
 	const dispatch = useDispatch();
 
-	const capitalizer = (str) => {
-		return str[0].toUpperCase() + str.slice(1);
-	}
-
-	const handleSelection = (e) => {
-		const selectionType = e.target.getAttribute("data-button-type");
-		const bookId = e.target.getAttribute("data-book-id");
-		const book = fetchedData.filter(book => book.id === bookId);
-		console.log("BOOK", book);
-		console.log("SELECTON:", selectionType);
-		console.log("BOOKID:", bookId);
-	}
-
 	useEffect(() => {
-		const fetchData = async () => {
-			try {
-				const response = await fetch(local, { method: 'GET' });
-				if (!response.ok) {
-					throw new Error('Network response was not ok.');
+		if(fetchedData.length > 0) {
+			return;
+		}
+		fetcher('data', 'GET')
+			.then(response => {
+				if(!response.data || !response.title) {
+					throw new Error();
 				}
-
-				const rawData = await response.json();
-				const objToArr = rawData.data.items || [];
-				const genre = rawData.title;
+				const objToArr = response.data.items || [];
+				const parsedArr = objToArr.map(book => bookObjFactory(book));
+		
+				const genre = response.title;
 				dispatch(updateTitle(genre.genre));
-				dispatch(updateFetchedData(objToArr));
-			} catch (error) {
-				console.log('MY BIG ERROR:', error);
-			}
-		};
+				dispatch(updateFetchedData(parsedArr));
+				
+			})
+			.catch(error => {
+				dispatch(updateToast(toastObjFactory("warning", "Server not responding")))
+			});
+	}, [dispatch, fetchedData]);
 
-		fetchData();
-	}, []);
+	const handleSelection = e => {
+
+
+		if(!loggedIn) {
+			return dispatch(updateToast(toastObjFactory("information", "Please login or create account")));
+		}
+		const selectionType = e.target.getAttribute('data-button-type');
+		const bookId = e.target.getAttribute('data-book-id');
+		const bookObj = fetchedData.find(book => book.book_id === bookId);
+		if (bookObj) {
+
+			function selector(type) {
+				const newObj = {
+					...bookObj,
+					date: dateProducer()
+				}
+				const selected = [];
+				if (selectionType === 'wish') {
+					selected.push('wishadd', 'POST', bookObj);
+				} else {
+					selected.push('readadd', 'POST', newObj);
+				}
+				return selected;
+			}
+			const argumentsArr = selector(selectionType);
+
+			fetcher(...argumentsArr)
+			.then(response => {
+				if(!response._id || !response.title) {
+					throw new Error();
+				}
+				dispatch(selectionType === 'wish' ? addBook(response) : addReadBook(response));
+				dispatch(removeDataItem(response.book_id));
+				dispatch(updateToast(toastObjFactory("success", `${bookObj.title} added to wishlist!`)));
+				dispatch(updateTabs(selectionType === 'wish' ? 1 : 2));
+				return navigate(selectionType === 'wish' ? "/wish" : "/read");
+			})
+			.catch(error => {
+				
+				dispatch(updateToast(toastObjFactory("warning", `${bookObj.title} failed to hit wishlist!`)));
+
+			});
+
+		 }
+	};
+
 
 	const imgBase = {
 		height: '185px',
@@ -57,51 +101,66 @@ const FetchedData = () => {
 
 	return (
 		<>
-		<div className="text-dark data__window container">
-			<div className="row mb-5 ">
-				{<p className="mb-3 app__sub-font">{capitalizer(title)}</p>}
-				{fetchedData.length === 0 ? (
-					<p>Loading...</p>
-				) : (
-					fetchedData.map((book, idx) => (
-						<div className="col-12 col-sm-6 g-0" style={colFlex} key={book.id}>
-							<div className="data__card bg-colour-light">
-								{book.volumeInfo.imageLinks && book.volumeInfo.imageLinks.smallThumbnail ? (
-									<img
-										src={
-											
-											book.volumeInfo.imageLinks.smallThumbnail
-										}
-										className="data__card-img-top"
-										alt={book.volumeInfo.title}
-										style={imgBase}
-									></img>
-								) : (
-									<div className="data__card-placeholder">
-										<p>No Thumbnail Available</p>
-									</div>
-								)}
-								<div className="data__card-body">
-									<div className="data__card-info">
-										<h5 className="data__card-title">
-											{book.volumeInfo.title}
-										</h5>
-										<p className="data__card-author">
-											{book.volumeInfo.authors}
-										</p>
-									</div>
-									<div className="data__card-btns">
-										<button className='btn base-btn' data-button-type="wish" data-book-id={book.id} onClick={handleSelection}>+ Wish</button>
-										<button className='btn base-btn' data-button-type="read" data-book-id={book.id} onClick={handleSelection}>+ Read</button>
+			<div className="text-dark data__window container">
+				<div className="row mb-5 ">
+					{<p className="mb-3 app__sub-font">{capitalizer(title)}</p>}
+					{fetchedData.length === 0 ? (
+						<p>Loading...</p>
+					) : (
+						fetchedData.map((book, idx) => (
+							<div
+								className="col-12 col-sm-6 g-0"
+								style={colFlex}
+								key={book.book_id + idx}
+							>
+								<div className="data__card bg-colour-light">
+									{book.thumbnail && 
+									book.thumbnail !== '' ? (
+										<img
+											src={book.thumbnail}
+											className="data__card-img-top"
+											alt={book.title}
+											style={imgBase}
+										></img>
+									) : (
+										<div className="data__card-placeholder">
+											<p>No Thumbnail Available</p>
+										</div>
+									)}
+									<div className="data__card-body">
+										<div className="data__card-info">
+											<h5 className="data__card-title">
+												{book.title}
+											</h5>
+											<p className="data__card-author">
+												{book.author}
+											</p>
+										</div>
+										<div className="data__card-btns">
+											<button
+												className="btn base-btn"
+												data-button-type="wish"
+												data-book-id={book.book_id}
+												onClick={handleSelection}
+											>
+												+ Wish
+											</button>
+											<button
+												className="btn base-btn"
+												data-button-type="read"
+												data-book-id={book.book_id}
+												onClick={handleSelection}
+											>
+												+ Read
+											</button>
+										</div>
 									</div>
 								</div>
 							</div>
-						</div>
-					))
-				)}
+						))
+					)}
+				</div>
 			</div>
-		</div>
-		
 		</>
 	);
 };
