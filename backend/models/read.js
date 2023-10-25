@@ -14,6 +14,10 @@ const readSchema = new Schema({
     type: Array,
     required: true,
   },
+  authorparse: {
+    type: String,
+    required: true,
+  },
   publisheddate: {
     type: String,
     required: true,

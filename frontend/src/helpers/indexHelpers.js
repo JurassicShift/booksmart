@@ -16,7 +16,6 @@ export const fetcher = async (route, method, payload = {}) => {
             let additionalData =  method !== "GET" && method !== "DELETE" ? { method: method, credentials: "include", headers: { 'Content-Type': 'application/json'}, body: JSON.stringify(payload) } : { method: method, credentials: "include" }
            
             const response = await fetch(local + route, additionalData);
-          console.log("RESPONSE:", response);
             if (!response.ok) {
                 throw new Error('Network response was not ok.');
             }
@@ -37,14 +36,26 @@ export 	const capitalizer = str => {
     return str[0].toUpperCase() + str.slice(1);
 };
 
+const authorParse = arr => {
+    const splitName = arr[0].split(' ');
+            return splitName[splitName.length > 0 ? splitName.length - 1 : 0].toLowerCase();
+}
+
+const publicationDateParse = str => {
+    const newDate = new Date(str);
+    const year = newDate.getFullYear();
+    return year;
+}
+
 export const bookObjFactory = (b) => {
     return  {
         book_id: b.id,
         title: b.volumeInfo.title,
         author: b.volumeInfo.authors,
+        authorparse: authorParse(b.volumeInfo.authors),
         rating: b.volumeInfo?.averageRating ?? 0,
         thumbnail: b.volumeInfo.imageLinks?.smallThumbnail ?? '',
-        publisheddate: b.volumeInfo.publishedDate,
+        publisheddate: publicationDateParse(b.volumeInfo.publishedDate),
         date: dateProducer(),
      }
 }
