@@ -7,7 +7,7 @@ import { removeBook } from '../redux/slices/wishSlice';
 import { updateToast } from '../redux/slices/toastSlice';
 import { updateTabs } from '../redux/slices/tabsSlice';
 import { fetcher, toastObjFactory } from '../helpers/indexHelpers';
-
+import Stars from './Stars';
 
 const WishReadData = ({ list, bookData }) => {
 	const dispatch = useDispatch();
@@ -23,12 +23,12 @@ const WishReadData = ({ list, bookData }) => {
 		if (selectionType === 'read') {
 			fetcher(urlRead, 'POST', b)
 				.then(response => {
-					if(!response._id || !response.title) {
+					if (!response._id || !response.title) {
 						throw new Error();
 					}
 					dispatch(addReadBook(b));
 					dispatch(
-						updateToast(toastObjFactory('success', 'Book Added to Read'))
+						updateToast(toastObjFactory('success', `${response.title} added to Read`))
 					);
 					dispatch(removeBook(b._id));
 					dispatch(updateTabs(2));
@@ -44,7 +44,7 @@ const WishReadData = ({ list, bookData }) => {
 						throw new Error();
 					}
 					dispatch(list === 'Wish' ? removeBook(b._id) : removeReadBook(b._id));
-					dispatch(updateToast(toastObjFactory('success', 'Book Deleted')));
+					dispatch(updateToast(toastObjFactory('success', `${response.deletedItem.title} deleted!`)));
 				})
 				.catch(error => {
 					dispatch(updateToast(toastObjFactory('warning', `${error.message}`)));
@@ -61,24 +61,21 @@ const WishReadData = ({ list, bookData }) => {
 		display: 'flex',
 		justifyContent: 'center',
 	};
-	const reversedData = bookData.slice().reverse();
 
+	const dateStyle = {
+		marginTop: '10px',
+	};
 	return (
 		<>
 			<div className="text-dark data__window container">
 				<div className="row mb-5 ">
 					{<p className="mb-3 app__sub-font">{list}</p>}
-					
+
 					{bookData.length === 0 ? (
 						<p>Loading...</p>
 					) : (
-						
-						reversedData.map((book, idx) => (
-							<div
-								className="col-12 col-sm-6 g-0"
-								style={colFlex}
-								key={idx}
-							>
+						bookData.map((book, idx) => (
+							<div className="col-12 col-sm-6 g-0" style={colFlex} key={idx}>
 								<div className="data__card bg-colour-light">
 									{book && book.thumbnail ? (
 										<img
@@ -97,16 +94,18 @@ const WishReadData = ({ list, bookData }) => {
 											<h5 className="data__card-title">{book.title}</h5>
 											<p className="data__card-author">{book.author}</p>
 											<p className="data__card-author">{`Published: ${book.publisheddate}`}</p>
-											<p className="data__card-author">
+											<p className="data__card-author" style={dateStyle}>
 												{list === 'Wish'
 													? `Date added: ${book.date}`
 													: `Date completed: ${book.date}`}
 											</p>
-											<p className="data__card-author">
-												{list === 'Wish'
-													? `Avr Rating: ${book.rating}`
-													: `My Rating: ${book.rating}`}
-											</p>
+											<div className="data__card-author">
+												{list === 'Wish' ? (
+													`Avg Rating: ${book.rating}`
+												) : (
+													<Stars starValue={book.rating} bookid={book._id} />
+												)}
+											</div>
 										</div>
 										<div className="data__card-btns">
 											{list === 'Wish' && (

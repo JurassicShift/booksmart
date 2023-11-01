@@ -30,11 +30,6 @@ const Login = ({ active }) => {
 		const target = e.target.id;
 		let payload = target === 'login' ? loginData: signupData;
 
-		// if (target === 'login') {
-		// 	payload = loginData;
-		// } else {
-		// 	payload = signupData;
-		// }
 
 		fetcher(target, 'POST', payload)
 			.then(response => {

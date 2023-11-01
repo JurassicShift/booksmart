@@ -60,9 +60,9 @@ const FetchedData = () => {
 				}
 				const selected = [];
 				if (selectionType === 'wish') {
-					selected.push('wishadd', 'POST', bookObj);
+					selected.unshift('wishadd', 'POST', bookObj);
 				} else {
-					selected.push('readadd', 'POST', newObj);
+					selected.unshift('readadd', 'POST', newObj);
 				}
 				return selected;
 			}

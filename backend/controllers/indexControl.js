@@ -136,6 +136,24 @@ const postRead = async (req, res) => {
 	}
 };
 
+const postRating = async (req, res) => {
+	const { id, rating } = req.params;
+	const userId = req.session.user_id;
+
+	if (id && userId) {
+		try {
+			const updatedItem = await Read.findByIdAndUpdate(id, {rating: rating}, { new: true } );
+			res.status(201).send({ updatedItem: updatedItem });
+			
+		
+		} catch (e) {
+			res.status(500).send({ message: `Internal server error ${e.message}` });
+		}
+	} else {
+		res.status(401).send({ message: `Invalid Request` });
+	}
+}
+
 const deleteBook = async (req, res) => {
 	const { id, list } = req.params;
 	const userId = req.session.user_id;
@@ -167,4 +185,5 @@ module.exports = {
 	postWish,
 	deleteBook,
 	postRead,
+	postRating
 };

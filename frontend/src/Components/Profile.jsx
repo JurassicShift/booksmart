@@ -10,7 +10,7 @@ import { updateTabs } from '../redux/slices/tabsSlice';
 
 
 
-const Profile = ({ btnActive, loggedIn }) => {
+const Profile = ({ btnActive }) => {
 	const { username } = useSelector(state => state.login);
 	const dispatch = useDispatch();
 	const navigate = useNavigate();

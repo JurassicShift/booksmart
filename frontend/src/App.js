@@ -62,7 +62,7 @@ function App() {
 						<div className="app__main-view">
 							<SearchTabs />
 							<SearchBar />
-								{tab !== 0 && <Sort />}
+								{tab !== 0 && <Sort wish={wish} read={read} />}
 							<div className="app__data">
 								<Routes>
 									<Route path="/" element={<FetchedData />}></Route>

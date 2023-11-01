@@ -51,7 +51,7 @@ export const bookObjFactory = (b) => {
     return  {
         book_id: b.id,
         title: b.volumeInfo.title,
-        author: b.volumeInfo.authors,
+        author: b.volumeInfo.authors[0],
         authorparse: authorParse(b.volumeInfo.authors),
         rating: b.volumeInfo?.averageRating ?? 0,
         thumbnail: b.volumeInfo.imageLinks?.smallThumbnail ?? '',

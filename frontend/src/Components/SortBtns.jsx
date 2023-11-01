@@ -1,18 +1,13 @@
-import React, { useEffect, useState } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import { addBooks } from '../redux/slices/wishSlice';
-import { addReadBooks } from '../redux/slices/readSlice';
 
-const Sort = () => {
+import { useSelector, useDispatch } from 'react-redux';
+import { sortBooks } from '../redux/slices/wishSlice';
+import { sortReadBooks } from '../redux/slices/readSlice';
+
+const Sort = ({wish, read}) => {
 	const sortTitles = ['Author', 'Year', 'Rating'];
 	const tab = useSelector(state => state.tabs.active);
-	const read = useSelector(state => state.read);
-	const wish = useSelector(state => state.wish);
-	const [list, setList] = useState([]);
+	const dispatch = useDispatch();
 
-	// useEffect(() => {
-	// 	useDispatch(tab === 1 ? addBooks(listSorted) : addReadBooks(listSorted));
-	// }, list);
 
 	const handleSort = e => {
 		const sortTarget = e.target.name;
@@ -29,18 +24,16 @@ const Sort = () => {
 				);
 				break;
 			case 'Year':
-				listSorted.sort((a, b) => a.publisheddate - b.publisheddate);
+				listSorted.sort((a, b) => b.publisheddate - a.publisheddate);
 				break;
 			case 'Rating':
-				listSorted.sort((a, b) => a.rating - b.rating);
+				listSorted.sort((a, b) => b.rating - a.rating);
 				break;
-			default:
-				listSorted.sort();
+				default:
+					listSorted.sort();
 		}
-		console.log('target:', e.target.name);
-		console.log('list:', sortList);
-		console.log('sortedList:', listSorted);
-		return setList(listSorted);
+
+		dispatch(tab === 1 ? sortBooks(listSorted) : sortReadBooks(listSorted));
 
 	};
 	return (

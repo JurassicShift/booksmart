@@ -12,6 +12,9 @@ export const wishSlice = createSlice({
 		addBooks: (state, action) => {
 			return [...state, ...action.payload];
 		},
+		sortBooks: (state, action) => {
+			return [ ...action.payload];
+		},
         removeBook: (state, action) => {
          return state.filter(book => book._id !== action.payload)
         }, 
@@ -21,6 +24,6 @@ export const wishSlice = createSlice({
 	},
 });
 
-export const { addBook, addBooks, removeBook, resetWish } = wishSlice.actions;
+export const {addBook, addBooks, removeBook, resetWish, sortBooks } = wishSlice.actions;
 
 export default wishSlice.reducer;

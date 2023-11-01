@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { getBookData, postLogin, postSignup, postWish, deleteBook, postRead } = require('../controllers/indexControl');
+const { getBookData, postLogin, postSignup, postWish, deleteBook, postRead, postRating } = require('../controllers/indexControl');
 const { checkUsernameAvailability, checkEmailAvailability, isAuthenticated } = require('../middleware/indexMiddleware');
 
 router.get("/data",  getBookData);
@@ -10,6 +10,7 @@ router.post("/signup", checkUsernameAvailability, checkEmailAvailability, postSi
 
 router.post("/wishadd", isAuthenticated, postWish );
 router.delete("/bookdelete/:id/:list", isAuthenticated, deleteBook);
+router.post("/postrating/:id/:rating", isAuthenticated, postRating);
 
 router.post("/readadd", isAuthenticated, postRead );
 
