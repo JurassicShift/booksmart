@@ -145,7 +145,11 @@ $tab-font-sz: 16px;
 .tabs {
 	width: 100%;
 	@include flex-row-center(space-between);
-	margin: 30px 0 0 10px;
+	margin: 30px 0 20px 10px;
+	@include xxl {
+		margin: 30px 0 40px 10px;
+
+	}
 
 	&__base {
 		&-active {
@@ -181,12 +185,19 @@ $tab-font-sz: 16px;
 	@include md {
 		padding: 30px 0;
 	}
+	@include xxl {
+		padding: 35px 0;
+		font-size: 20px;
+	}
 }
 
 p.card-text {
 	text-align: center;
 	@include breakpoint(768px) {
 		font-size: 18px;
+	}
+	@include xxl {
+		font-size: 20px;
 	}
 }
 
@@ -214,6 +225,9 @@ p.card-text {
 	}
 	@include lg {
 		font-size: 16px;
+	}
+	@include xxl {
+		top: -45px;
 	}
 }
 
@@ -243,10 +257,17 @@ p.card-text {
 
 	@include lg {
 		img {
-			height: 55px;
-			width: 55px;
+			height: 60px;
+			width: 60px;
 		}
 	}
+
+	@include xxl {
+		img {
+			height: 70px;
+			width: 70px;
+		}
+	}	
 	
 }
 

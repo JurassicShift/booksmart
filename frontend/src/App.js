@@ -4,25 +4,20 @@ import { useSelector, useDispatch } from 'react-redux';
 import { updateBtnLogin } from './redux/slices/btnLoginSlice.js';
 import './styles/css/index.css';
 import Header from './Components/Header.jsx';
-import Btn from './Components/Btn.jsx';
-import SearchBar from './Components/SearchBar.jsx';
-import SearchTabs from './Components/SearchTabs.jsx';
-import Logo from './Components/Logo.jsx';
+import SubHeader from './Components/SubHeader.jsx';
+import TabsAndSearch from './Components/TabsAndSearch.jsx';
 import FetchedData from './Components/FetchedData.jsx';
-import LoginForm from './Components/LoginForm.jsx';
-import Profile from './Components/Profile.jsx';
+import Menu from './Components/Menu.jsx';
 import Toaster from './Components/Toast.jsx';
 import WishReadData from './Components/WishReadData.jsx';
-import Sort from './Components/SortBtns.jsx';
+
 
 function App() {
 	const { btnLogin } = useSelector(state => state.btnLogin);
-	const buttonTitle = btnLogin ? 'back' : 'login/signup';
 	const activeLogin = useSelector(state => state.login.active);
 	const toast = useSelector(state => state.toast);
 	const wish = useSelector(state => state.wish.data);
 	const read = useSelector(state => state.read.data);
-	const tab = useSelector(state => state.tabs.active);
 
 	const toastProps = {
 		active: toast.active,
@@ -44,29 +39,9 @@ function App() {
 				<Header login={activeLogin} />
 				<div className="app__parent">
 					<div className="app__main">
-						<div className="app__main-btn mt-2">
-							<Logo />
-							{activeLogin ? (
-								<i
-									className="bi bi-three-dots-vertical app__dots"
-									onClick={() => dispatch(updateBtnLogin())}
-								></i>
-							) : (
-								<Btn
-									btnTitle={buttonTitle}
-									btnClick={() => dispatch(updateBtnLogin())}
-									btnRoute={'#'}
-									classExtension={'base-btn-login'}
-								/>
-							)}
-						</div>
+						<SubHeader activeLogin={activeLogin} btnLogin={btnLogin}/>
 						<div className="app__main-view">
-							<div className="container limiter">
-							<SearchTabs />
-							
-							<SearchBar />
-								{tab !== 0 && <Sort wish={wish} read={read} />}
-								</div>
+								<TabsAndSearch wish={wish} read={read}/>
 							<div className="app__data">
 								<div className="app__data-container">
 								<Routes>
@@ -83,11 +58,7 @@ function App() {
 								</div>
 							
 							</div>
-							{activeLogin ? (
-								<Profile btnActive={btnLogin} />
-							) : (
-								<LoginForm active={btnLogin} />
-							)}
+							<Menu activeLogin={activeLogin} btnLogin={btnLogin} />
 						</div>
 					</div>
 				</div>

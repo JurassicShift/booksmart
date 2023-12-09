@@ -12367,7 +12367,12 @@ body::-webkit-scrollbar-thumb:hover {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin: 30px 0 0 10px;
+  margin: 30px 0 20px 10px;
+}
+@media (min-width: 1200px) {
+  .tabs {
+    margin: 30px 0 40px 10px;
+  }
 }
 .tabs__base-active {
   color: #fff;
@@ -12429,6 +12434,12 @@ body::-webkit-scrollbar-thumb:hover {
     padding: 30px 0;
   }
 }
+@media (min-width: 1200px) {
+  .custom-card .card-body {
+    padding: 35px 0;
+    font-size: 20px;
+  }
+}
 
 p.card-text {
   text-align: center;
@@ -12436,6 +12447,11 @@ p.card-text {
 @media (min-width: 768px) {
   p.card-text {
     font-size: 18px;
+  }
+}
+@media (min-width: 1200px) {
+  p.card-text {
+    font-size: 20px;
   }
 }
 
@@ -12472,6 +12488,11 @@ p.card-text {
     font-size: 16px;
   }
 }
+@media (min-width: 1200px) {
+  .badge {
+    top: -45px;
+  }
+}
 
 .logo {
   margin: 10px 0 0 10px;
@@ -12493,8 +12514,14 @@ p.card-text {
 }
 @media (min-width: 960px) {
   .logo img {
-    height: 55px;
-    width: 55px;
+    height: 60px;
+    width: 60px;
+  }
+}
+@media (min-width: 1200px) {
+  .logo img {
+    height: 70px;
+    width: 70px;
   }
 }
 
