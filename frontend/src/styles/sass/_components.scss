@@ -13,6 +13,13 @@
 		color: $dark-text;
 	}
 
+	&-login {
+		@extend .base-btn;
+		@include xs {
+			margin: 10px 20px 10px 10px;
+		}
+	}
+
 	.contained-Lt {
 		margin-left: 0px;
 	}
@@ -22,17 +29,100 @@
 	}
 }
 
+// ==============================
+// HEADER
+// ==============================
+
+.header {
+	@include flex-column-center;
+	background-color: $base-colour;
+
+	@include md {
+		min-height: 145px;
+	}
+
+	&__title {
+		width: 100%;
+		@include flex-row-center(space-between, flex-start);
+		height: 50px;
+		margin-top: 10px;
+
+		@include sm {
+			margin-top: 15px;
+		}
+
+		@include md {
+			margin-top: 20px;
+		}
+
+		&-font {
+			font-family: SmartFont;
+			font-size: 35px;
+			margin-left: 10px;
+			@include sm {
+				font-size: 40px;
+				margin-left: 15px;
+			}
+			@include md {
+				font-size: 60px;
+				margin-left: 15px;
+			}
+		}
+
+		&-icons {
+			width: 100%;
+			line-height: 50px;
+			@include flex-row-center(flex-end, center);
+			margin-right: 5px;
+			i {
+				font-size: 20px;
+			}
+			@include md {
+				height: 72px;
+				i {
+					font-size: 23px;
+				}
+			}
+		}
+	}
+	&__text {
+		line-height: 18px;
+		letter-spacing: 0.5px;
+		margin: 0 7px 15px 10px;
+		@include sm {
+			margin-left: 15px;
+		}
+		@include md {
+			max-width: 720px;
+			font-size: 18px;
+			line-height: 20px;
+			margin: 20px;
+		}
+		@include lg {
+			margin-top: 30px;
+			font-size: 20px;
+			line-height: 22px;
+
+
+		}
+	}
+}
+
+.icon-mg {
+	margin-left: 10px;
+	margin-right: 10px;
+
+	@include md {
+		margin-left: 15px;
+		margin-right: 15px;
+	}
+}
+
 // ============================
 // TABS
 // ============================
 
 $tab-font-sz: 16px;
-
-.custom-card .card-body {
-	@include breakpointMax {
-		padding: 10px;
-	}
-}
 
 @mixin base-tab(
 	$my-col: $dark-text,
@@ -52,63 +142,330 @@ $tab-font-sz: 16px;
 		padding: 0.25rem;
 	}
 }
+.tabs {
+	width: 100%;
+	@include flex-row-center(space-between);
+	margin: 30px 0 0 10px;
 
-.tab-active {
-	@include base-tab($base-text, $dark-text, $base-text);
-	background-color: $base-colour;
+	&__base {
+		&-active {
+			@include base-tab($base-text, $dark-text, $base-text);
+			background-color: $base-colour;
+		}
+		&-nonActive {
+			@include base-tab();
+			background-color: map-get($colour-palette, 'light');
+		}
+	}
 }
 
-.tab-non-active {
-	@include base-tab();
-	background-color: map-get($colour-palette, 'light');
+.tabs .card {
+	flex: 1 0 68px;
 }
 
-.base-tab-mg {
-	margin-left: $tabs-mg;
+.custom-card .card-body {
+	@include xxs {
+		padding: 10px;
+		font-size: 12px;
+	}
+	@include xs {
+		padding: 12px;
+		font-size: 16px;
+	}
+	@include sm {
+		padding: 18px 12px;
+	}
+	@include breakpoint(768px) {
+		padding: 25px 5px;
+	}
+	@include md {
+		padding: 30px 0;
+	}
+}
+
+p.card-text {
+	text-align: center;
+	@include breakpoint(768px) {
+		font-size: 18px;
+	}
+}
+
+.badge {
+	--bs-badge-padding-x: 0.8em;
+	--bs-badge-padding-y: 0.4em;
+	--bs-badge-border-radius: 3px;
+	position: relative;
+	top: -25px;
+	left: -15px;
+	background-color: #d28266;
+	padding: var(--bs-badge-padding-y) var(--bs-badge-padding-x);
+	border-radius: var(--bs-badge-border-radius);
+
+	@include sm {
+		top: -30px;
+		left: -20px;
+	}
+	@include breakpoint(768px) {
+		font-size: 14px;
+		top: -35px;
+	}
+	@include md {
+		top: -40px;
+	}
+	@include lg {
+		font-size: 16px;
+	}
 }
 
 // ============================
 // LOGO
 // ============================
 
-.base-logo {
-	height: 45px;
-	width: 45px;
+.logo {
+	margin: 10px 0 0 10px;
+
 	img {
 		height: 45px;
 		width: 45px;
-		margin: 5px;
 	}
+
+	@include sm {
+		margin-left: 15px;
+	}
+	
+
+	@include md {
+		img {
+			height: 50px;
+			width: 50px;
+		}
+	}
+
+	@include lg {
+		img {
+			height: 55px;
+			width: 55px;
+		}
+	}
+	
+}
+
+// ===============================
+// LOGIN/PROFILE MENU
+// ================================
+
+$menu-top: 15px;
+$menu-base-height: 100%;
+
+.menu {
+	background-color: #fff;
+	position: absolute;
+	top: -15px;
+	max-width: 720px;
+	height:  calc(#{$menu-top} + #{$menu-base-height});
+	z-index: 99;
+
+	@include xs {
+		
+		$menu-top: 12px;
+		top: -12px;
+		height: calc(#{$menu-top} + #{$menu-base-height});
+	}
+
+	&__login {
+		width: 100%;
+		height: 38px;
+		@include flex-row-center(flex-start);
+		margin-bottom: 20px;
+
+		&-title {
+			line-height: 54px;
+			@include app-font;
+			position: relative;
+		}
+//acc4bc
+//dce4e1
+		&-bg {
+			background-color: #acc4bc;
+			padding: 25px 0 20px 0;
+			border-radius: 5px;
+			margin: 0 10px 20px 10px;
+
+			@include xs {
+				margin: 0 20px 20px 20px;
+			}
+
+			@include sm {
+				margin: 0 30px 20px 30px;
+
+			}
+		}
+
+		&-section {
+			@include flex-column-center;
+		}
+
+		&-label {
+			// width: 100%;
+			// max-width: 270px;
+			width: 90%;
+			margin-bottom: 10px;
+			@include flex-row-center(flex-start);
+		}
+	}
+
+	&__btn {
+		@include flex-row-center(flex-end);
+	}
+}
+
+.active {
+	animation: slideIn 0.4s ease-out forwards;
+	@include lg {
+		animation: slideInLg 0.4s ease-out forwards;
+	}
+}
+
+.notActive {
+	animation: slideOut 0.4s ease-out forwards;
+	@include lg {
+		animation: slideOutLg 0.4s ease-out forwards;
+	}
+}
+
+@keyframes slideIn {
+	0% {
+		transform: translateX(100%);
+	}
+	100% {
+		transform: translateX(0);
+	}
+}
+
+@keyframes slideOut {
+	0% {
+		transform: translateX(0);
+	}
+	100% {
+		transform: translateX(100%);
+	}
+}
+
+.form-control.limiter {
+	max-width: 90%;
+
+}
+
+$element-width: 720px;
+$screen-width: 100vw;
+$difference: calc(#{$screen-width} - #{$element-width});
+$combined: calc(#{$element-width} + #{$difference});
+
+@keyframes slideInLg {
+	0% {
+		transform: translateX(#{$combined});
+	}
+	100% {
+		transform: translateX(#{$difference});
+	}
+}
+
+@keyframes slideOutLg {
+	0% {
+		transform: translateX(#{$difference});
+	}
+	100% {
+		transform: translateX(#{$combined});
+	}
+}
+
+.profile {
+	&__main {
+		padding: 30px 20px 10px 20px;
+		margin-top: 20px;
+		margin-bottom: 20px;
+		cursor: pointer;
+		border-radius: 4px;
+		background-color: $card-colour;
+
+		&-flex {
+			@include flex-row-center(flex-start);
+		}
+	}
+
+	&__menu {
+		height: 71px;
+	}
+
+	&__img {
+		@include flex-column-center;
+		background: linear-gradient($base-colour, $gradient-colour);
+		border-radius: 4px;
+		height: auto;
+		margin-top: 20px;
+		margin-bottom: 10px;
+	}
+
+	&__text {
+		margin-left: 15px;
+		line-height: 20px;
+	}
+}
+
+.plus {
+	height: 100%;
+	align-items: center;
 }
 
 // ==============================
 // DATA CARDS
 // ==============================
 
-.data__window {
-	margin-top: 50px;
+.data {
+	&__card {
+		@include flex-column-center(center, space-between);
+		margin-top: 10px;
+		padding: 30px 10px 15px 10px;
+		border-radius: 4px;
+		width: 260px;
+		min-height: 340px;
+
+		&-placeholder {
+			height: 185px;
+			width: 120px;
+			background-color: #ddd;
+			@include flex-column-center;
+			justify-content: center;
+			line-height: 18px;
+		}
+
+		&-info {
+			@include flex-column-center;
+			margin-top: 10px;
+			text-align: center;
+		}
+
+		&-author {
+			margin-top: 5px;
+		}
+
+		&-btns {
+			@include flex-row-center;
+		}
+	}
 }
 
-.data__card {
-	@include flex-column-center;
-	margin-top: 10px;
-	padding: 30px 10px 15px 10px;
-	border-radius: 4px;
-	width: 80%;
-}
+// ============================================
+// SORT BTNS
+// ============================================
 
-.data__card-info {
-	@include flex-column-center;
-	margin-top: 10px;
-	text-align: center;
-}
+.sort {
+	@include flex-row-center(flex-end);
 
-.data__card-author {
-	margin-top: 5px;
-}
-
-.data__card-btns {
-	@include flex-row-center;
+	&__btns {
+		width: 100%;
+		@include flex-row-center(flex-end);
+	}
 }
 
 // ==========================================
@@ -121,53 +478,39 @@ $tab-font-sz: 16px;
 	right: 20px;
 	border-radius: 5px;
 	z-index: 999;
-}
 
-.toast-header {
-	justify-content: space-between;
-	border-radius: 5px;
-	background-color: transparent;
-	color: white;
-	font-size: 16px;
-}
-
-.toast__section {
-	height: 100%;
-	width: 100%;
-	@include flex-row-center;
-}
-
-.toast__text {
-	width: 100%;
-	@include flex-column-center(flex-start);
-	margin-left: 20px;
-	letter-spacing: 0.5px;
-
-	p:first-child {
-		font-weight: bold;
-		margin-bottom: 5px;
-		font-size: 18px;
-	}
-}
-
-.toast__icon {
-	height: 100%;
-	.bi {
-		font-size: 25px;
+	&-header {
+		justify-content: space-between;
+		border-radius: 5px;
+		background-color: transparent;
 		color: white;
+		font-size: 16px;
+	}
+
+	&__section {
+		height: 100%;
+		width: 100%;
+		@include flex-row-center;
+	}
+
+	&__text {
+		width: 100%;
+		@include flex-column-center(flex-start);
+		margin-left: 20px;
+		letter-spacing: 0.5px;
+
+		p:first-child {
+			font-weight: bold;
+			margin-bottom: 5px;
+			font-size: 18px;
+		}
+	}
+
+	&__icon {
+		height: 100%;
+		.bi {
+			font-size: 25px;
+			color: white;
+		}
 	}
 }
-
-.badge {
-	--bs-badge-padding-x: 0.80em;
-	--bs-badge-padding-y: 0.40em;
-	--bs-badge-border-radius: 3px;
-	position: relative;
-	top: -25px;
-	left: -15px;
-	background-color: #d28266;
-	padding: var(--bs-badge-padding-y) var(--bs-badge-padding-x);
-	border-radius: var(--bs-badge-border-radius);
-  }
-
-

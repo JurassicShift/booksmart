@@ -1,35 +1,54 @@
 import { createSlice } from '@reduxjs/toolkit';
+import { dateProducer } from '../../helpers/indexHelpers.js';
 
-const initialState = [];
+const initialState = {
+	data: [],
+	date: dateProducer()
+}
 
 export const readSlice = createSlice({
 	name: 'read',
 	initialState,
 	reducers: {
 		addReadBook: (state, action) => {
-			return [...state, action.payload];
+			return {
+				data: [...state.data, action.payload],
+				date: dateProducer()
+			}
 		},
 		addReadBooks: (state, action) => {
-			return [...state, ...action.payload];
+			return {
+				data: [...state.data, ...action.payload],
+				date: state.date
+			}
 		},
         removeReadBook: (state, action) => {
-         return state.filter(book => book._id !== action.payload)
+			return {
+				data: state.data.filter(book => book._id !== action.payload),
+				date: dateProducer()
+			}
         },
 		sortReadBooks: (state, action) => {
-			return [ ...action.payload];
+			return {
+				data: [ ...action.payload],
+				date: state.date
+			}
 		},
 		updateRating: (state, action) => {
-			
-			return [...state].map(book => {
-				if(book._id === action.payload._id) {
-					return {
-						...book,
-						rating: action.payload.rating
-					}
-				} else {
-					return book;
-				}
-			})
+
+			return {
+				data: [...state.data].map(book => {
+						if(book._id === action.payload._id) {
+							return {
+								...book,
+								rating: action.payload.rating
+							}
+						} else {
+							return book;
+						}
+					}),
+					date: dateProducer()
+			}
 		},
 		resetRead: () => {
 			return initialState;

@@ -69,43 +69,50 @@ const Login = ({ active }) => {
 
 	return (
 		<div
-			className={`container login__container ${
+			className={`container menu ${
 				active ? 'active' : 'notActive'
 			}`}
 		>
 			<form className="mt-1 mb-1" id="login" onSubmit={formSubmit}>
-				<div className="login__title">
-					<h1 className="login__title-h1">Login</h1>
+				<div className="menu__login">
+					<h1 className="menu__login-title">Login</h1>
 				</div>
-				<div className="mb-3">
+				<div className='menu__login-bg'>
+				<div className="mb-3 menu__login-section">
+					<div className="menu__login-label">
 					<label htmlFor="loginUsername" className="form-label text-dark">
 						Username
 					</label>
+					</div>
+					
 					<input
 						type="text"
 						name="username"
 						onChange={e =>
 							setLoginData({ ...loginData, username: e.target.value })
 						}
-						className="form-control"
+						className="form-control limiter"
 						id="loginUsername"
 					></input>
 				</div>
-				<div className="mb-3">
+				<div className="mb-3 menu__login-section">
+				<div className="menu__login-label">
 					<label htmlFor="loginPassword" className="form-label text-dark">
 						Password
 					</label>
+					</div>
 					<input
 						type="password"
 						name="user_password"
 						onChange={e =>
 							setLoginData({ ...loginData, userpass: e.target.value })
 						}
-						className="form-control"
+						className="form-control limiter"
 						id="loginPassword"
 					></input>
 				</div>
-				<div className="login__btn">
+				</div>
+				<div className="menu__btn">
 					<button
 						className="btn base-btn"
 						type="submit"
@@ -115,67 +122,77 @@ const Login = ({ active }) => {
 					</button>
 				</div>
 			</form>
-			<form className="mt-1" id="signup" onSubmit={formSubmit}>
-				<div className="login__title">
-					<h1 className="login__title-h1">SignUp</h1>
+			<form  id="signup" onSubmit={formSubmit}>
+				<div className="menu__login">
+					<h1 className="menu__login-title">SignUp</h1>
 				</div>
-				<div className="mb-3">
+				<div className='menu__login-bg'>
+				<div className="mb-3 menu__login-section">
+				<div className="menu__login-label">
 					<label htmlFor="username" className="form-label text-dark">
 						Username
 					</label>
+					</div>
 					<input
 						type="text"
 						name="username"
 						onChange={e =>
 							setSignupData({ ...signupData, username: e.target.value })
 						}
-						className="form-control"
+						className="form-control limiter"
 						id="username"
 					></input>
 				</div>
-				<div className="mb-3">
+				<div className="mb-3 menu__login-section">
+				<div className="menu__login-label">
 					<label htmlFor="email" className="form-label text-dark">
 						Email address
 					</label>
+					</div>
 					<input
 						type="text"
 						name="email"
 						onChange={e =>
 							setSignupData({ ...signupData, useremail: e.target.value })
 						}
-						className="form-control"
+						className="form-control limiter"
 						id="email"
 					></input>
 				</div>
-				<div className="mb-3">
+				<div className="mb-3 menu__login-section">
+				<div className="menu__login-label">
 					<label htmlFor="password" className="form-label text-dark">
 						Password
 					</label>
+					</div>
 					<input
 						type="password"
 						name="user_password"
 						onChange={e =>
 							setSignupData({ ...signupData, userpass: e.target.value })
 						}
-						className="form-control"
+						className="form-control limiter"
 						id="password"
 					></input>
 				</div>
-				<div className="mb-3">
+				<div className="mb-3 menu__login-section">
+				<div className="menu__login-label">
 					<label htmlFor="confirmPassword" className="form-label text-dark">
 						Confirm Password
 					</label>
+					</div>
 					<input
 						type="password"
 						onChange={e =>
 							setSignupData({ ...signupData, userconfirm: e.target.value })
 						}
 						name="user_confirm"
-						className="form-control"
+						className="form-control limiter"
 						id="confirmPassword"
 					></input>
 				</div>
-				<div className="login__btn">
+				</div>
+				<div className="menu__btn">
 					<button
 						className="btn base-btn"
 						type="submit"

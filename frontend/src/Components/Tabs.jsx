@@ -1,3 +1,4 @@
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateTabs } from '../redux/slices/tabsSlice';
@@ -10,13 +11,13 @@ const Tabs = () => {
 	const dispatch = useDispatch();
 	const active = useSelector(state => state.tabs.active);
 	const login = useSelector(state => state.login.active);
-	const read = useSelector(state => state.read);
+	const read = useSelector(state => state.read.data);
 	const r = read.length;
-	const wish = useSelector(state => state.wish);
+	const wish = useSelector(state => state.wish.data);
 	const w = wish.length;
 	const home = useSelector(state => state.category.data);
 	const h = home.length;
-
+	const listLengths = [h, w, r];
 	const handleActive = num => {
 		if (!login && num !== 0) {
 			return dispatch(
@@ -32,46 +33,31 @@ const Tabs = () => {
 		navigate('/' + routes[num].toLowerCase());
 	};
 
-	const margAdder = {
-		marginLeft: '10px',
-	};
 
 	const newTabs = routes.map((route, idx) => {
 		return (
-			<>
-				<div
+			<React.Fragment key={`tab-${idx}`}>
+				
+			<div
 					className={
 						active === idx
-							? 'card tab-active custom-card'
-							: 'card tab-non-active custom-card'
+							? 'card tabs__base-active custom-card'
+							: 'card tabs__base-nonActive custom-card'
 					}
 					onClick={() => handleActive(idx)}
-					style={idx !== 0 ? margAdder : null}
-					key={idx}
+					
 				>
-					<div className="card-body d-flex flex-column justify-content-end">
+					<div className="card-body ">
 						<p className="card-text">{route}</p>
 					</div>
 				</div>
-				{idx === 0 && (
-					<span key={`badge-${idx}`} className="badge">
-						{h}
+				<span className="badge">
+						{listLengths[idx]}
 					</span>
-				)}
-				{idx === 1 && (
-					<span key={`badge-${idx}`} className="badge">
-						{w}
-					</span>
-				)}
-				{idx === 2 && (
-					<span key={`badge-${idx}`} className="badge">
-						{r}
-					</span>
-				)}
-			</>
+					</React.Fragment>
 		);
 	});
-	return newTabs;
+	return newTabs; 
 };
 
 export default Tabs;

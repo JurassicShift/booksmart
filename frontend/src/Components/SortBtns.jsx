@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { sortBooks } from '../redux/slices/wishSlice';
 import { sortReadBooks } from '../redux/slices/readSlice';
 
+
 const Sort = ({wish, read}) => {
 	const sortTitles = ['Author', 'Year', 'Rating'];
 	const tab = useSelector(state => state.tabs.active);
@@ -36,19 +37,24 @@ const Sort = ({wish, read}) => {
 		dispatch(tab === 1 ? sortBooks(listSorted) : sortReadBooks(listSorted));
 
 	};
+
+	
+
 	return (
-		<div className="container mt-4 d-flex justify-content-end">
+		<div className=" mt-4 sort" >
 			<div className="dropdown">
 				<button
 					className="btn btn-secondary btn-sm dropdown-toggle"
 					type="button"
 					data-bs-toggle="dropdown"
 					aria-expanded="false"
+					data-bs-display="static"
 				>
 					Sort by
 				</button>
-				<ul className="dropdown-menu">
-					<div className="d-flex">
+			
+				<ul className="dropdown-menu sort__custom dropdown-menu-end " >
+					<div className="d-flex" >
 						{sortTitles.map((title, idx) => {
 							return (
 								<li key={title + idx} className="px-1">

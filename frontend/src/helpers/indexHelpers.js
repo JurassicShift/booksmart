@@ -24,8 +24,7 @@ export const fetcher = async (route, method, payload = {}) => {
         
             return rawData;
         } catch(error) {
-            console.log("error message:", error.message);
-            throw error;
+            throw new Error(`Fetching data error: `, error.message);
         }
     } else {
         throw new Error('Route or method incorrect.');
@@ -65,5 +64,38 @@ export const toastObjFactory = (type, notice) => {
         active: true,
         notice: notice,
         type: type
+    }
+}
+
+export const gridSpaceSelect = (screen) => {
+    const gridSpace = ["g-3", "g-4", "g-5"];
+    if(screen < 576) {
+        return gridSpace[0];
+    } else if(screen >= 576) {
+        return gridSpace[1];
+    }
+}
+
+export const marginFactory = (dataLength, screenWidth, mapIdx) => {
+
+    const margAdder = {
+        marginBottom: '20px',
+    };
+
+    if (screenWidth <= 575 && dataLength === mapIdx + 1) {
+        return margAdder;
+    } else if (
+        screenWidth > 575
+    ) {
+        if(dataLength % 2 === 0  && dataLength - 2 === mapIdx) {
+            return margAdder;
+        }
+        else if(dataLength === mapIdx + 1) {
+            return margAdder;
+        } else {
+            return null;
+        }
+    } else {
+        return null;
     }
 }

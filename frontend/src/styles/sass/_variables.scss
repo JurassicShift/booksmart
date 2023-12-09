@@ -22,10 +22,11 @@ $card-colour: #c9d3cc;
 $tabs-mg: 5px;
 
 
-@mixin flex-column-center ($justify: center) {
+@mixin flex-column-center ($align: center, $justify: center) {
     display: flex;
     flex-direction: column;
-    align-items: $justify;
+    align-items: $align;
+    justify-content: $justify;
   };
 
   @mixin flex-row-center($justify:center, $justifyAlign: center) {

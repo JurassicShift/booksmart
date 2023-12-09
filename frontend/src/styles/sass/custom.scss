@@ -1,11 +1,8 @@
 @import '../frontend/node_modules/bootstrap/scss/bootstrap.scss';
 
-.dropdown-menu {
-    position: absolute;
-    display: none;
-    text-align: right;
-    list-style: none;
+
+  .dropdown-menu.sort__custom {
     background-color: transparent;
     border: none;
-    border-radius: var(--bs-dropdown-border-radius);
   }
+  

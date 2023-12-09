@@ -1,22 +1,38 @@
 import { createSlice } from '@reduxjs/toolkit';
+import { dateProducer } from '../../helpers/indexHelpers.js';
 
-const initialState = [];
+const initialState = {
+	data: [],
+	date: dateProducer()
+}
 
 export const wishSlice = createSlice({
 	name: 'wish',
 	initialState,
 	reducers: {
 		addBook: (state, action) => {
-			return [...state, action.payload];
+			return {
+				data: [...state.data, action.payload],
+				date: dateProducer()
+			}
 		},
 		addBooks: (state, action) => {
-			return [...state, ...action.payload];
+			return {
+				data: [...state.data, ...action.payload],
+				date: state.date
+			}
 		},
 		sortBooks: (state, action) => {
-			return [ ...action.payload];
+			return {
+				data: [ ...action.payload],
+				date: state.date
+			}
 		},
         removeBook: (state, action) => {
-         return state.filter(book => book._id !== action.payload)
+			return {
+				data: state.data.filter(book => book._id !== action.payload),
+				date: dateProducer()
+			}
         }, 
 		resetWish: () => {
 			return initialState;

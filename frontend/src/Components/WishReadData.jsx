@@ -6,12 +6,15 @@ import { addReadBook, removeReadBook } from '../redux/slices/readSlice';
 import { removeBook } from '../redux/slices/wishSlice';
 import { updateToast } from '../redux/slices/toastSlice';
 import { updateTabs } from '../redux/slices/tabsSlice';
-import { fetcher, toastObjFactory } from '../helpers/indexHelpers';
+import { fetcher, toastObjFactory, gridSpaceSelect, marginFactory } from '../helpers/indexHelpers';
 import Stars from './Stars';
+import useWindowWidth from '../hooks/indexHooks.js';
+
 
 const WishReadData = ({ list, bookData }) => {
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
+	const width = useWindowWidth();
 
 	const handleSelection = e => {
 		const selectionType = e.target.getAttribute('data-button-type');
@@ -65,18 +68,23 @@ const WishReadData = ({ list, bookData }) => {
 	const dateStyle = {
 		marginTop: '10px',
 	};
+
+	const arrLength = bookData.length;
+	const gridSpace = gridSpaceSelect(width);
+
 	return (
 		<>
+		<p className="mb-3 app__font-title">{list}</p>
 			<div className="text-dark data__window container">
-				<div className="row mb-5 ">
-					{<p className="mb-3 app__sub-font">{list}</p>}
+				<div className="row ">
+					
 
 					{bookData.length === 0 ? (
 						<p>Loading...</p>
 					) : (
 						bookData.map((book, idx) => (
-							<div className="col-12 col-sm-6 g-0" style={colFlex} key={idx}>
-								<div className="data__card bg-colour-light">
+							<div className={`col-12 col-sm-6 ${gridSpace}`} style={colFlex} key={idx}>
+								<div className="data__card bg-colour-light" 	style={marginFactory(arrLength, width, idx)}>
 									{book && book.thumbnail ? (
 										<img
 											src={book.thumbnail}
@@ -86,7 +94,9 @@ const WishReadData = ({ list, bookData }) => {
 										></img>
 									) : (
 										<div className="data__card-placeholder">
-											<p>No Thumbnail Available</p>
+											<p>No</p>
+											<p>Thumbnail</p>
+											<p>Available</p>
 										</div>
 									)}
 									<div className="data__card-body">

@@ -2,7 +2,7 @@ import Tabs from "./Tabs";
 
 const SearchTabs = () => {
     return(
-        <div className="app__tabs">
+        <div className="tabs">
             <Tabs />
         </div>
     )

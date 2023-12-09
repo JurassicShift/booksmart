@@ -20,8 +20,8 @@ function App() {
 	const buttonTitle = btnLogin ? 'back' : 'login/signup';
 	const activeLogin = useSelector(state => state.login.active);
 	const toast = useSelector(state => state.toast);
-	const wish = useSelector(state => state.wish);
-	const read = useSelector(state => state.read);
+	const wish = useSelector(state => state.wish.data);
+	const read = useSelector(state => state.read.data);
 	const tab = useSelector(state => state.tabs.active);
 
 	const toastProps = {
@@ -42,7 +42,7 @@ function App() {
 		<Router>
 			<div className="app">
 				<Header login={activeLogin} />
-				<div className="app__parent layout-left">
+				<div className="app__parent">
 					<div className="app__main">
 						<div className="app__main-btn mt-2">
 							<Logo />
@@ -56,14 +56,19 @@ function App() {
 									btnTitle={buttonTitle}
 									btnClick={() => dispatch(updateBtnLogin())}
 									btnRoute={'#'}
+									classExtension={'base-btn-login'}
 								/>
 							)}
 						</div>
 						<div className="app__main-view">
+							<div className="container limiter">
 							<SearchTabs />
+							
 							<SearchBar />
 								{tab !== 0 && <Sort wish={wish} read={read} />}
+								</div>
 							<div className="app__data">
+								<div className="app__data-container">
 								<Routes>
 									<Route path="/" element={<FetchedData />}></Route>
 									<Route
@@ -75,6 +80,8 @@ function App() {
 										element={<WishReadData list="Read" bookData={read} />}
 									></Route>
 								</Routes>
+								</div>
+							
 							</div>
 							{activeLogin ? (
 								<Profile btnActive={btnLogin} />

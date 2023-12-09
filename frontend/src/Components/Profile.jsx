@@ -12,6 +12,8 @@ import { updateTabs } from '../redux/slices/tabsSlice';
 
 const Profile = ({ btnActive }) => {
 	const { username } = useSelector(state => state.login);
+	const wish = useSelector(state => state.wish);
+	const read = useSelector(state => state.read);
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
 	const location = useLocation();
@@ -42,7 +44,7 @@ const Profile = ({ btnActive }) => {
 
 	return (
 		<div
-			className={`container profile__container ${
+			className={`container menu ${
 				btnActive ? 'active' : 'notActive'
 			}`}
 		>
@@ -93,25 +95,24 @@ const Profile = ({ btnActive }) => {
 				<input
 					type="radio"
 					className="btn-check"
-					name="title"
-					id="btnradio1"
-					autoComplete="off"
-				></input>
-				<label className="btn btn-secondary" htmlFor="btnradio1">
-					<i className="bi bi-book"></i>
-					<p>22</p>
-				</label>
-
-				<input
-					type="radio"
-					className="btn-check"
 					name="author"
 					id="btnradio2"
 					autoComplete="off"
 				></input>
 				<label className="btn btn-secondary" htmlFor="btnradio2">
 					<i className="bi bi-star"></i>
-					<p>53</p>
+					<p>{wish.data.length}</p>
+				</label>
+				<input
+					type="radio"
+					className="btn-check"
+					name="title"
+					id="btnradio1"
+					autoComplete="off"
+				></input>
+				<label className="btn btn-secondary" htmlFor="btnradio1">
+					<i className="bi bi-book"></i>
+					<p>{read.data.length}</p>
 				</label>
 
 				<input
@@ -123,7 +124,7 @@ const Profile = ({ btnActive }) => {
 				></input>
 				<label className="btn btn-secondary" htmlFor="btnradio3">
 					Last Updated:
-					<p>23.07.97.</p>
+					<p>{wish.date >= read.date ? wish.date : read.date}</p>
 				</label>
 			</div>
 		</div>
