@@ -41,9 +41,9 @@ const SearchBar = () => {
 			}
 
 			const rawData = await response.json();
-			const objToArr = rawData.data.items || [];
+			const objToArr = rawData.obj.data.items || [];
 			const parsedArr = objToArr.map(book => bookObjFactory(book));
-			const title = rawData.title.genre;
+			const title = rawData.obj.title.genre;
 			dispatch(updateFetchedData(parsedArr));
 			dispatch(updateTitle(title));
 			e.target.searchTerms.value = null;

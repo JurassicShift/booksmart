@@ -15,10 +15,15 @@ const userSchema = new Schema({
 		type: String,
 		required: [true, 'Password is required!'],
 	},
-	userimage:
-	{
-		url: String,
-		filename: String
+	userimage: {
+		url: {
+			type: String,
+			default: '',
+		},
+		filename: {
+			type: String,
+			default: '',
+		},
 	},
 	userwish: [
 		{
@@ -26,23 +31,23 @@ const userSchema = new Schema({
 			ref: 'UserWish',
 		},
 	],
+	default: [],
 	userread: [
 		{
 			type: Schema.Types.ObjectId,
 			ref: 'UserRead',
 		},
 	],
+	default: [],
 });
 
 userSchema.statics.findAndValidate = async function (username, password) {
-
 	const foundUser = await this.findOne({ username });
 	const isValid = await bcrypt.compare(password, foundUser.userpass);
 	return isValid ? foundUser : false;
 };
 
 userSchema.pre('save', async function (next) {
-	
 	if (!this.isModified('userpass')) return next();
 	this.userpass = await bcrypt.hash(this.userpass, 12);
 	next();

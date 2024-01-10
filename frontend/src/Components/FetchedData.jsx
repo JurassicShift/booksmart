@@ -36,13 +36,13 @@ const FetchedData = () => {
 		}
 		fetcher('data', 'GET')
 			.then(response => {
-				if (!response.data || !response.title) {
+				if (!response.obj.data || !response.obj.title) {
 					throw new Error();
 				}
-				const objToArr = response.data.items || [];
+				const objToArr = response.obj.data.items || [];
 				const parsedArr = objToArr.map(book => bookObjFactory(book));
 
-				const genre = response.title;
+				const genre = response.obj.title;
 				dispatch(updateTitle(genre.genre));
 				dispatch(updateFetchedData(parsedArr));
 			})
@@ -65,7 +65,7 @@ const FetchedData = () => {
 		const bookId = e.target.getAttribute('data-book-id');
 		const bookObj = fetchedData.find(book => book.book_id === bookId);
 		if (bookObj) {
-			function selector(type) {
+			function selector() {
 				const newObj = {
 					...bookObj,
 					date: dateProducer(),
@@ -78,17 +78,17 @@ const FetchedData = () => {
 				}
 				return selected;
 			}
-			const argumentsArr = selector(selectionType);
+			const argumentsArr = selector();
 
 			fetcher(...argumentsArr)
 				.then(response => {
-					if (!response._id || !response.title) {
+					if (!response.obj._id || !response.obj.title) {
 						throw new Error();
 					}
 					dispatch(
-						selectionType === 'wish' ? addBook(response) : addReadBook(response)
+						selectionType === 'wish' ? addBook(response.obj) : addReadBook(response.obj)
 					);
-					dispatch(removeDataItem(response.book_id));
+					dispatch(removeDataItem(response.obj.book_id));
 					dispatch(
 						updateToast(
 							toastObjFactory('success', `${bookObj.title} added to wishlist!`)

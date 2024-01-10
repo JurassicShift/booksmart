@@ -242,9 +242,27 @@ body::-webkit-scrollbar-thumb:hover {
 		height: 100vh;
 		width: 100%;
 		background-color: map-get($colour-palette, 'text');
+	
 
 		&-btn {
 			@include flex-row-center(space-between);
+
+			i {
+				background-color: transparent;
+				border-radius: 5px;
+				position: relative;
+				top: -5px;
+				padding: 0 5px 0 5px;
+				transition: background-color 250ms ease-in-out;
+
+				@include md {
+					top: -8px;
+				}
+			}
+
+			i:hover {
+				background-color: rgba(240, 243, 245, 0.9);
+			}
 		}
 
 		&-view {
@@ -269,11 +287,15 @@ body::-webkit-scrollbar-thumb:hover {
 	}
 
 	&__dots {
-		font-size: 30px;
+		font-size: 25px;
 		color: #6c757d;
 		line-height: 45px;
 		margin-right: 5px;
 		cursor: pointer;
+
+		@include md {
+			font-size: 30px;
+		}
 	}
 
 	&__data {

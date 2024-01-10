@@ -33,20 +33,23 @@ const Login = ({ active }) => {
 
 		fetcher(target, 'POST', payload)
 			.then(response => {
-				if(!response.username || !response.active) {
-					throw new Error();
+				console.log("response:", response.obj);
+				if(!response.obj.username || !response.obj.active ) {
+					throw new Error("Fetch Error");
 				}
 				const loginData = {
 					active: true,
-					username: response.username,
+					username: response.obj.username,
+					imgUrl: response.obj.imgUrl
 				};
-
-				const wishArray = response.userwish;
+		
+					
+				const wishArray = response.obj.userwish || [];
 				if(wishArray.length > 0) {
 					dispatch(addBooks(wishArray));
 				}
 				
-				const readArray = response.userread;
+				const readArray = response.obj.userread || [];
 				if(readArray.length > 0) {
 					dispatch(addReadBooks(readArray));
 				}
@@ -55,8 +58,8 @@ const Login = ({ active }) => {
 				dispatch(updateBtnLogin());
 				const toastParams =
 					target === 'login'
-						? ['information', `Welcome back ${response.username}`]
-						: ['success', `Welcome ${response.username}`];
+						? ['information', `Welcome back ${response.obj.username}`]
+						: ['success', `Welcome ${response.obj.username}`];
 			
 				dispatch(updateToast(toastObjFactory(...toastParams)));
 			})

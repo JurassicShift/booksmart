@@ -15,18 +15,18 @@ import WishReadData from './Components/WishReadData.jsx';
 function App() {
 	const { btnLogin } = useSelector(state => state.btnLogin);
 	const activeLogin = useSelector(state => state.login.active);
+	const url = useSelector(state => state.login.imgUrl);
 	const toast = useSelector(state => state.toast);
 	const wish = useSelector(state => state.wish.data);
 	const read = useSelector(state => state.read.data);
-
-	const toastProps = {
+	
+		const toastProps = {
 		active: toast.active,
 		notice: toast.notice,
 		type: toast.type,
 	};
 
 	const dispatch = useDispatch();
-
 	useEffect(() => {
 		if (activeLogin) {
 			dispatch(updateBtnLogin);
@@ -36,7 +36,7 @@ function App() {
 	return (
 		<Router>
 			<div className="app">
-				<Header login={activeLogin} />
+				<Header url={url}/>
 				<div className="app__parent">
 					<div className="app__main">
 						<SubHeader activeLogin={activeLogin} btnLogin={btnLogin}/>

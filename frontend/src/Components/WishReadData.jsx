@@ -26,12 +26,12 @@ const WishReadData = ({ list, bookData }) => {
 		if (selectionType === 'read') {
 			fetcher(urlRead, 'POST', b)
 				.then(response => {
-					if (!response._id || !response.title) {
-						throw new Error();
+					if (!response.obj._id || !response.obj.title) {
+						throw new Error("Response data missing.");
 					}
 					dispatch(addReadBook(b));
 					dispatch(
-						updateToast(toastObjFactory('success', `${response.title} added to Read`))
+						updateToast(toastObjFactory('success', `${response.obj.title} added to Read`))
 					);
 					dispatch(removeBook(b._id));
 					dispatch(updateTabs(2));
@@ -43,11 +43,11 @@ const WishReadData = ({ list, bookData }) => {
 		} else {
 			fetcher(urlBookDelete, 'DELETE')
 				.then(response => {
-					if (!response.deletedItem._id || !response.deletedItem.title) {
-						throw new Error();
+					if (!response.obj._id || !response.obj.title) {
+						throw new Error("Response data missing.");
 					}
 					dispatch(list === 'Wish' ? removeBook(b._id) : removeReadBook(b._id));
-					dispatch(updateToast(toastObjFactory('success', `${response.deletedItem.title} deleted!`)));
+					dispatch(updateToast(toastObjFactory('success', `${response.obj.title} deleted!`)));
 				})
 				.catch(error => {
 					dispatch(updateToast(toastObjFactory('warning', `${error.message}`)));

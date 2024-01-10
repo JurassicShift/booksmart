@@ -20,7 +20,7 @@ const Stars = ({ starValue, bookid }) => {
 
 		fetcher(url, "POST")
 		.then(response => {
-			const r = response.updatedItem;
+			const r = response.obj;
 			dispatch(updateRating(ratingData));
 			dispatch(
 				updateToast(toastObjFactory('success', `${r.title} rated ${r.rating} stars!`))
