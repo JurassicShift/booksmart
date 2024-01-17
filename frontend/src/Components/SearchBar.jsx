@@ -57,8 +57,8 @@ const SearchBar = () => {
 	};
 
 	return (
-		// <div className="container ">
-		<>
+		
+		<search>
 			<p className="app__font mt-4 mb-3">Search...</p>
 			<form
 				className="d-flex flex-column needs-validation"
@@ -75,13 +75,13 @@ const SearchBar = () => {
 							<input
 								type="radio"
 								className="btn-check"
-								name="title"
+								name={cat}
 								id={`btnradio${idx}`}
 								autoComplete="off"
 								checked={isActive === idx }
 								onChange={() => setSearchCategory(cat.toLowerCase(), idx)}
 							></input>
-							<label 	className="btn btn-secondary" htmlFor={`btnradio${idx}`}>
+							<label 	className="btn btn-secondary search__label" htmlFor={`btnradio${idx}`}>
 							{ cat }
 							</label>
 							</React.Fragment>
@@ -92,7 +92,7 @@ const SearchBar = () => {
 				<div className="input-group has-validation">
 					<input
 						type="text"
-						className="form-control"
+						className="form-control search__input"
 						placeholder={`${searchCategory}...`}
 						aria-label="Username"
 						aria-describedby="basic-addon1"
@@ -105,8 +105,8 @@ const SearchBar = () => {
 					<div className="invalid-feedback">Enter Search Term.</div>
 				</div>
 			</form>
-			</>
-		// </div>
+			</search>
+		
 	);
 };
 

@@ -9,22 +9,43 @@ import { updateTabs } from '../redux/slices/tabsSlice';
 import {
 	labelNameFactory,
 	pwValidation,
+	deletePwValidation,
 	toastObjFactory,
+	stringifyErrors,
 } from '../helpers/indexHelpers';
 import { updateToast } from '../redux/slices/toastSlice';
+import {
+	updateDummyFn,
+	updateFormFn,
+	deleteFormFn,
+	deleteDummyFn,
+} from '../redux/slices/formActiveSlice';
 
-const ProfileToggleForm = ({ target, inputArr, activeDummy, activeForm }) => {
+const ProfileToggleForm = ({ target, inputArr }) => {
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
 	const location = useLocation();
-	const name = useSelector(state => state.login.username);
+
+	const { username } = useSelector(state => state.login.username);
+
+	const { deleteDummy, deleteForm, updateDummy, updateForm } = useSelector(
+		state => state.form
+	);
+	const activeDummy = target === 'Update' ? updateDummy : deleteDummy;
+	const activeForm = target === 'Update' ? updateForm : deleteForm;
 
 	const [passwords, setPasswords] = useState({
-		currentPw: '',
-		newPw: '',
-		confirmPw: '',
-		username: name,
+		current: '',
+		newpw: '',
+		confirm: '',
+		username: username,
 	});
+
+	const url = `http://localhost:5000/${
+		target === 'Update' ? 'updatepassword' : 'deleteaccount'
+	}`;
+
+	const method = target === 'Update' ? 'POST' : 'DELETE';
 
 	const fieldUpdater = (value, stateField) => {
 		setPasswords(prevPasswords => ({
@@ -42,8 +63,7 @@ const ProfileToggleForm = ({ target, inputArr, activeDummy, activeForm }) => {
 		});
 	};
 
-	const handleReset= () => {
-	
+	const handleReset = () => {
 		dispatch(resetLogin());
 		dispatch(updateBtnLogin());
 		dispatch(resetWish());
@@ -54,79 +74,84 @@ const ProfileToggleForm = ({ target, inputArr, activeDummy, activeForm }) => {
 		}
 	};
 
+	const errorMsgFactory = formTarget => {
+		return formTarget === 'Update'
+			? 'Password update failed.'
+			: 'Deletion Failed';
+	};
+
+	const toastMsgFactory = (response, formTarget) => {
+		return formTarget === 'Update'
+			? `Password Updated ${response.obj.username}`
+			: `${response.obj.deletedUser.username}'s account deleted`;
+	};
+
+	const closeForm = () => {
+		dispatch(target === 'Update' ? updateDummyFn(null) : deleteDummyFn(null));
+		dispatch(target === 'Update' ? updateFormFn(null) : deleteFormFn(null));
+	};
+
+	const revealInputContent = (ev) => {
+		const inputElement = ev.currentTarget.nextSibling;
+		const type = inputElement.type;
+		inputElement.setAttribute("type", type === "password" ? "text" : "password");
+	}
+
+	const fetchUpdate = () => {
+		fetch(url, {
+			method: method,
+			credentials: 'include',
+			headers: {
+				Accept: 'application/json',
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify(passwords),
+		})
+			.then(response => {
+				if (response.ok) {
+					return response.json();
+				} else {
+					throw new Error(errorMsgFactory());
+				}
+			})
+			.then(data => {
+				fieldReseter('', inputArr);
+
+				if (target === 'Delete') handleReset();
+
+				const toastMsg = toastMsgFactory(data, target);
+
+				dispatch(updateToast(toastObjFactory('success', toastMsg)));
+				return closeForm();
+			})
+			.catch(error => {
+				console.log('fired here:', error);
+				dispatch(
+					updateToast(toastObjFactory('warning', `Error ${error.message}!`))
+				);
+			});
+	};
+
+	const errorsUpdate = errors => {
+		let errorStr = stringifyErrors(errors);
+		dispatch(updateToast(toastObjFactory('warning', `${errorStr}..!`)));
+	};
+
+	const update = validation => {
+		if (validation.valid) return fetchUpdate();
+
+		if (validation.errors.length > 0) return errorsUpdate(validation.errors);
+	};
+
 	const handleUpdate = e => {
 		e.preventDefault();
 
-		const url = `http://localhost:5000/${
-			target === 'Update' ? 'updatepassword' : 'deleteaccount'
-		}`;
+		let validation =
+			target === 'Update'
+				? pwValidation(passwords)
+				: deletePwValidation(passwords['confirm']);
 
-		const method = target === 'Update' ? 'POST' : 'DELETE';
-
-		const formData = {
-			current: passwords['currentPw'],
-			newpw: passwords['newPw'],
-			confirm: passwords['confirmPw'],
-			username: passwords['username'],
-		};
-
-		let validation = pwValidation(formData, target);
-
-		if (validation.valid) {
-			fetch(url, {
-				method: method,
-				credentials: 'include',
-				headers: {
-					Accept: 'application/json',
-					'Content-Type': 'application/json',
-				},
-				body: JSON.stringify(formData),
-			})
-				.then(response => {
-					if (response.ok) {
-						return response.json();
-					} else {
-						throw new Error(
-							target === 'Update'
-								? 'Password update failed.'
-								: 'Deletion Failed'
-						);
-					}
-				})
-				.then(data => {
-					fieldReseter('', inputArr);
-					if(target === "Delete") handleReset();
-					console.log('return data:', data);
-					const toastMsg =
-						target === 'Update'
-							? `Password Updated ${data.obj.username}`
-							: `${data.obj.deletedUser.username}'s account deleted`;
-					dispatch(
-						updateToast(
-							toastObjFactory(
-								'success',
-								toastMsg
-							)
-						)
-					);
-				})
-				.catch(error => {
-					console.log('fired here:', error);
-					dispatch(
-						updateToast(toastObjFactory('warning', `Error ${error.message}!`))
-					);
-				});
-		} else {
-			let errorStr;
-			validation.errors.forEach((error, idx) => {
-				if (idx === 0) {
-					errorStr = error.msg;
-				} else {
-					errorStr += ' ' + error.msg;
-				}
-			});
-			dispatch(updateToast(toastObjFactory('warning', `${errorStr}..!`)));
-		}
+		return update(validation);
 	};
 
 	const showForm = {
@@ -138,15 +163,20 @@ const ProfileToggleForm = ({ target, inputArr, activeDummy, activeForm }) => {
 	};
 
 	let labelName;
-
+	const animateDummy =
+		target === 'Update' ? 'profile__form-dummy' : 'profile__form-dummyDelete';
+	const reverseAnimateDummy =
+		target === 'Update'
+			? 'profile__form-dummyReverse'
+			: 'profile__form-dummyReverseDelete';
 	return (
-		<form id="pwUpdate" onSubmit={handleUpdate}>
+		<form id={target === 'Update' ? 'pwUpdate': 'deleteAc'} onSubmit={handleUpdate}>
 			<div
 				className={
 					target && activeDummy && activeForm
-						? 'profile__form-dummyReverse'
+						? reverseAnimateDummy
 						: target && activeDummy && !activeForm
-						? 'profile__form-dummy'
+						? animateDummy
 						: 'profile__form-hide'
 				}
 			></div>
@@ -162,22 +192,23 @@ const ProfileToggleForm = ({ target, inputArr, activeDummy, activeForm }) => {
 			>
 				{inputArr.map((field, idx) => {
 					labelName =
-						target === 'Update' ? labelNameFactory(idx) : 'Confirm Passord';
-
+						target === 'Update' ? labelNameFactory(idx) : 'Confirm Password';
+					const idField = target === 'Update' ? field : `${field}Delete`;
 					return (
 						<label
 							htmlFor={field}
 							key={`profileLabel${idx}`}
 							className={`profile__form-pwLabel${idx}`}
 						>
-							{labelName}
+							<div className='profile__form-pwSpan' onClick={revealInputContent}>{labelName}<i className="bi bi-eye"></i></div>
 							<input
 								className="pwInput form-control"
-								type="text"
+								type="password"
 								name={field}
-								id={field}
+								id={idField}
 								value={passwords[field]}
 								onChange={e => fieldUpdater(e.target.value, field)}
+								required
 							></input>
 						</label>
 					);

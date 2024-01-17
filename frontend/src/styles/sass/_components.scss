@@ -4,6 +4,7 @@
 
 .base-btn {
 	background-color: $base-btn-colour;
+	font-size: 14px;
 	color: $dark-text;
 	border-radius: 4px;
 	margin: 10px;
@@ -47,6 +48,12 @@
 	.contained-Rt {
 		margin-right: 0px;
 	}
+}
+
+.upload-focus:focus {
+	border-color: #51ef63;
+	box-shadow: 0 0 0 0.2rem rgba(81, 239, 99, 0.5);
+	@extend .base-btn-form-cropRight;
 }
 
 // ==============================
@@ -286,6 +293,15 @@ p.card-text {
 	}
 }
 
+// ================================
+// SEARCH BAR
+// ==================================
+
+.search__label,
+.search__input {
+	font-size: 14px;
+}
+
 // ===============================
 // LOGIN/PROFILE MENU
 // ================================
@@ -318,8 +334,6 @@ $menu-base-height: 100%;
 			@include app-font;
 			position: relative;
 		}
-		//acc4bc
-		//dce4e1
 		&-bg {
 			background-color: #acc4bc;
 			padding: 25px 0 20px 0;
@@ -340,8 +354,6 @@ $menu-base-height: 100%;
 		}
 
 		&-label {
-			// width: 100%;
-			// max-width: 270px;
 			width: 90%;
 			margin-bottom: 10px;
 			@include flex-row-center(flex-start);
@@ -457,6 +469,15 @@ $combined: calc(#{$element-width} + #{$difference});
 			height: 336px;
 			animation: reverseAnimateMenu 250ms linear forwards;
 		}
+		&-dummyDelete {
+			@extend .profile__form-dummy;
+			animation: animateDeleteMenu 250ms linear forwards;
+		}
+		&-dummyReverseDelete {
+			@extend .profile__form-dummy;
+			height: 152px;
+			animation: reverseAnimateDeleteMenu 250ms linear forwards;
+		}
 		&-hide {
 			display: none;
 		}
@@ -504,7 +525,22 @@ $combined: calc(#{$element-width} + #{$difference});
 			opacity: 0;
 			animation: animateLabels 250ms linear 400ms forwards;
 		}
-	
+
+		&-pwSpan {
+			width: 100%;
+			@include flex-row-center(space-between);
+
+			i {
+				color: #fff;
+				font-size: 16px;
+				cursor: pointer;
+				transition: color 500ms ease-out;
+			}
+			i:hover {
+				color: #212529;
+			}
+		}
+
 		&-uploadSection {
 			display: flex;
 			align-items: center;
@@ -542,7 +578,6 @@ $combined: calc(#{$element-width} + #{$difference});
 		&-deleteDummy {
 			@extend .profile__form-dummy;
 			animation: animateDeleteMenu 250ms linear forwards;
-
 		}
 	}
 
@@ -587,15 +622,6 @@ $combined: calc(#{$element-width} + #{$difference});
 	}
 }
 
-@keyframes animateDeleteMenu {
-	0% {
-		height: 0px;
-	}
-	100% {
-		height: 137px;
-	}
-}
-
 @keyframes reverseAnimateMenu {
 	0% {
 		height: 336px;
@@ -605,9 +631,18 @@ $combined: calc(#{$element-width} + #{$difference});
 	}
 }
 
+@keyframes animateDeleteMenu {
+	0% {
+		height: 0px;
+	}
+	100% {
+		height: 152px;
+	}
+}
+
 @keyframes reverseAnimateDeleteMenu {
 	0% {
-		height: 137px;
+		height: 152px;
 	}
 	100% {
 		height: 0px;
@@ -625,7 +660,6 @@ $combined: calc(#{$element-width} + #{$difference});
 		opacity: 1;
 	}
 }
-
 
 .plus {
 	height: 100%;
@@ -681,6 +715,18 @@ $combined: calc(#{$element-width} + #{$difference});
 		width: 100%;
 		@include flex-row-center(flex-end);
 	}
+
+	&__labels {
+		background-color: map-get($colour-palette, 'light-3');
+		color: $dark-text;
+		// opacity: 0.9;
+		&:hover {
+
+			 background-color: map-get($colour-palette, 'light');
+	
+		}
+	}
+	
 }
 
 // ==========================================
@@ -729,3 +775,27 @@ $combined: calc(#{$element-width} + #{$difference});
 		}
 	}
 }
+
+// =====================================
+// SPINNER
+// =====================================
+
+.spinner {
+	border: 10px solid #bdc3c7;
+	margin: auto;
+	width: 50px;
+	height: 50px;
+	border-top-color: #1abc9c;
+	border-bottom-color: #3498db;
+	border-radius: 50%;
+	animation: spin 1.5s linear infinite;
+}
+
+@keyframes spin {
+	0% {
+	  transform: rotate(0deg);
+	}
+	100% {
+	  transform: rotate(360deg);
+	}
+  }

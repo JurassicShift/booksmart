@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { updateToast } from '../redux/slices/toastSlice';
 import { toastObjFactory } from '../helpers/indexHelpers';
@@ -7,13 +7,15 @@ import { resetUrl, updateUrl } from '../redux/slices/loginSlice';
 const ProfileImg = () => {
 	const [dataState, setDataState] = useState(null);
 	const dispatch = useDispatch();
+	const btnFocusRef = useRef();
 
 	const handlePhotoUpload = e => {
 		e.preventDefault();
+		btnFocusRef.current.blur();
 		const formData = new FormData();
 		formData.append('filename', dataState);
 		const url = 'http://localhost:5000/photoupload';
-
+	
 		fetch(url, {
 			method: 'POST',
 			credentials: 'include',
@@ -24,6 +26,7 @@ const ProfileImg = () => {
 					return response.json();
 				} else {
 					dispatch(updateToast(toastObjFactory('warning', `Upload failed!`)));
+					setDataState(null);
 				}
 			})
 			.then(data => {
@@ -35,6 +38,7 @@ const ProfileImg = () => {
 				dispatch(
 					updateToast(toastObjFactory('warning', `Photo error ${error}!`))
 				);
+				setDataState(null);
 			});
 	};
 
@@ -60,6 +64,23 @@ const ProfileImg = () => {
 				);
 			});
 	};
+
+	const handleRemoveFocus = () => {
+		const timer = setTimeout(() => {
+			btnFocusRef.current.blur();
+			return clearTimeout(timer);
+		}, 4000);
+	};
+
+	useEffect(() => {
+		if (dataState) {
+			const timer = setTimeout(() => {
+				btnFocusRef.current.focus();
+				return clearTimeout(timer);
+			}, 500);
+		}
+	}, [btnFocusRef, dataState]);
+
 	return (
 		<>
 			<form
@@ -80,6 +101,8 @@ const ProfileImg = () => {
 							id="myFile"
 							name="filename"
 							onChange={e => setDataState(e.target.files[0])}
+							onClick={e => (e.target.value = '')}
+						
 						></input>
 					</label>
 					{dataState && (
@@ -90,18 +113,19 @@ const ProfileImg = () => {
 					)}
 				</div>
 				<div className="profile__form-uploadSubmit">
-					<button className=" base-btn-form-cropRight" type="submit">
+					<button
+						className="btn upload-focus base-btn-form-cropRight"
+						type="submit"
+						onFocus={handleRemoveFocus}
+						ref={btnFocusRef}
+					>
 						<i className="bi bi-upload profile__form-iconAdjust"></i>
 						Upload
 					</button>
 				</div>
 			</form>
 			<form className="profile__main-flex" onSubmit={handlePhotoDelete}>
-				<button
-					className=" base-btn-form-cropLeft"
-					type="submit"
-				>
-				
+				<button className=" base-btn-form-cropLeft" type="submit">
 					<i className="bi bi-trash3 profile__form-icon"></i>
 					Delete Image
 				</button>

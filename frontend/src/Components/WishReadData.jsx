@@ -8,6 +8,7 @@ import { updateToast } from '../redux/slices/toastSlice';
 import { updateTabs } from '../redux/slices/tabsSlice';
 import { fetcher, toastObjFactory, gridSpaceSelect, marginFactory } from '../helpers/indexHelpers';
 import Stars from './Stars';
+import FetchLoader from './FetchLoader.jsx';
 import useWindowWidth from '../hooks/indexHooks.js';
 
 
@@ -80,7 +81,7 @@ const WishReadData = ({ list, bookData }) => {
 					
 
 					{bookData.length === 0 ? (
-						<p>Loading...</p>
+						<FetchLoader bookCollection={list} />
 					) : (
 						bookData.map((book, idx) => (
 							<div className={`col-12 col-sm-6 ${gridSpace}`} style={colFlex} key={idx}>

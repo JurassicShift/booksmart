@@ -124,23 +124,22 @@ export const labelNameFactory = num => {
 	return labelName;
 };
 
-export const pwValidation = (obj, target) => {
+const validationObjFactory = (errorArr) => {
+	const test = errorArr.length > 0;
+
+	const validationObj = {
+		valid: test ? false : true,
+		errors: test ? errorArr : [],
+	}
+
+	return validationObj;
+}
+
+export const pwValidation = (obj) => {
 	
 	const errors = [];
 
 	const { current, newpw, confirm } = obj;
-
-	const validationObj = {
-		valid: errors.length > 0 ? false : true,
-		errors: errors.length > 0 ? errors : [],
-	}
-
-	if(target === "Delete") {
-		if (confirm.length < 8 ) {
-			errors.push({ msg: 'Passwords should be at least 8 characters.' });
-		}
-		return validationObj;
-	}
 
 	if (!current || !newpw || !confirm) {
 		errors.push({ msg: 'Please complete all fields.' });
@@ -149,8 +148,43 @@ export const pwValidation = (obj, target) => {
 		errors.push({ msg: "Passwords don't match." });
 	}
 	if (newpw.length < 8 || confirm.length < 8) {
-		errors.push({ msg: 'Passwords should be at least 8 characters.' });
+		errors.push({ msg: 'Passwords must be at least 8 characters.' });
 	}
-	console.log('errors array: ', errors);
+
+
+	const validationObj = validationObjFactory(errors);
+
 	return validationObj;
 };
+
+export const deletePwValidation = (pwConfirmation) => {
+
+	const errors = [];
+
+	if ( !pwConfirmation) {
+		errors.push({ msg: 'Field cannot be empty.' });
+	}
+
+	if (pwConfirmation.length < 8 ) {
+		errors.push({ msg: 'Passwords must be at least 8 characters.' });
+	}
+
+	const validationObj = validationObjFactory(errors);
+
+	return validationObj;
+}
+
+export const stringifyErrors = errorArr => {
+
+	let errorStr;
+	
+	errorArr.forEach((error, idx) => {
+		if (idx === 0) {
+			errorStr = error.msg;
+		} else {
+			errorStr += ' ' + error.msg;
+		}
+	});
+
+	return errorStr;
+}

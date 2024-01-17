@@ -1,12 +1,17 @@
 import React, { useEffect } from 'react';
 import ProfileToggleForm from './ProfileToggleForm';
 import { useSelector, useDispatch } from 'react-redux';
-import { updateDummyFn, updateFormFn, deleteDummyFn, deleteFormFn } from '../redux/slices/formActiveSlice';
+import {
+	updateDummyFn,
+	updateFormFn,
+	deleteDummyFn,
+	deleteFormFn,
+} from '../redux/slices/formActiveSlice';
 
 const ToggleBtn = ({ target }) => {
 	const btnName = target === 'Update' ? 'Update Password' : 'Delete Account';
 	const inputArr =
-		target === 'Update' ? ['currentPw', 'newPw', 'confirmPw'] : ['confirmPw'];
+		target === 'Update' ? ['current', 'newpw', 'confirm'] : ['confirm'];
 
 	const { deleteDummy, deleteForm, updateDummy, updateForm } = useSelector(
 		state => state.form
@@ -16,21 +21,25 @@ const ToggleBtn = ({ target }) => {
 
 	const handleOpen = e => {
 		e.preventDefault();
-		if (target === "Update" && updateDummy === null) {
+		if (target === 'Update' && updateDummy === null) {
 			dispatch(updateDummyFn(true));
 		}
-		if (target === "Delete" && deleteDummy === null) {
+		if (target === 'Delete' && deleteDummy === null) {
 			dispatch(deleteDummyFn(true));
 		}
 	};
 
-
 	useEffect(() => {
-
 		const formDisplayTimer = (dummyVal, formVal) => {
 			const timer = setTimeout(() => {
-				dispatch(target === "Update" ? updateDummyFn(dummyVal) : deleteDummyFn(dummyVal));
-				dispatch(target === "Update" ? updateFormFn(formVal) : deleteFormFn(formVal));
+				dispatch(
+					target === 'Update'
+						? updateDummyFn(dummyVal)
+						: deleteDummyFn(dummyVal)
+				);
+				dispatch(
+					target === 'Update' ? updateFormFn(formVal) : deleteFormFn(formVal)
+				);
 			}, 250);
 			return () => clearTimeout(timer);
 		};
@@ -43,9 +52,9 @@ const ToggleBtn = ({ target }) => {
 			} else {
 				return;
 			}
-		}
+		};
 
-		if(target === "Update") {
+		if (target === 'Update') {
 			formTriage(updateDummy, updateForm);
 		} else {
 			formTriage(deleteDummy, deleteForm);
@@ -71,19 +80,9 @@ const ToggleBtn = ({ target }) => {
 			</div>
 
 			{target === 'Update' ? (
-				<ProfileToggleForm
-					target={target}
-					inputArr={inputArr}
-					activeDummy={updateDummy}
-					activeForm={updateForm}
-				/>
+				<ProfileToggleForm target={target} inputArr={inputArr} />
 			) : (
-				<ProfileToggleForm
-					target={target}
-					inputArr={inputArr}
-					activeDummy={deleteDummy}
-					activeForm={deleteForm}
-				/>
+				<ProfileToggleForm target={target} inputArr={inputArr} />
 			)}
 		</>
 	);

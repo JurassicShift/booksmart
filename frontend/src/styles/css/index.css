@@ -11857,7 +11857,6 @@ textarea.form-control-lg {
   }
 }
 .dropdown-menu.sort__custom {
-  background-color: transparent;
   border: none;
 }
 
@@ -12257,15 +12256,16 @@ body::-webkit-scrollbar-thumb:hover {
   background-color: #fff;
 }
 
-.base-btn, .base-btn-form, .base-btn-form-cropRight, .base-btn-form-cropLeft, .base-btn-login {
+.base-btn, .base-btn-form, .base-btn-form-cropRight, .upload-focus:focus, .base-btn-form-cropLeft, .base-btn-login {
   background-color: #95af9f;
+  font-size: 14px;
   color: #212121;
   border-radius: 4px;
   margin: 10px;
   transition: all 500ms;
   cursor: pointer;
 }
-.base-btn:hover, .base-btn-form:hover, .base-btn-form-cropRight:hover, .base-btn-form-cropLeft:hover, .base-btn-login:hover {
+.base-btn:hover, .base-btn-form:hover, .base-btn-form-cropRight:hover, .upload-focus:hover:focus, .base-btn-form-cropLeft:hover, .base-btn-login:hover {
   background-color: #a9c4b3;
   color: #212121;
 }
@@ -12274,7 +12274,7 @@ body::-webkit-scrollbar-thumb:hover {
     margin: 10px 20px 10px 10px;
   }
 }
-.base-btn-form, .base-btn-form-cropRight, .base-btn-form-cropLeft {
+.base-btn-form, .base-btn-form-cropRight, .upload-focus:focus, .base-btn-form-cropLeft {
   padding: 10px;
   border: none;
   font-size: 14px;
@@ -12284,14 +12284,19 @@ body::-webkit-scrollbar-thumb:hover {
 .base-btn-form-cropLeft {
   margin-left: 0;
 }
-.base-btn-form-cropRight {
+.base-btn-form-cropRight, .upload-focus:focus {
   margin-right: 0;
 }
-.base-btn .contained-Lt, .base-btn-login .contained-Lt, .base-btn-form .contained-Lt, .base-btn-form-cropLeft .contained-Lt, .base-btn-form-cropRight .contained-Lt {
+.base-btn .contained-Lt, .base-btn-login .contained-Lt, .base-btn-form .contained-Lt, .base-btn-form-cropLeft .contained-Lt, .base-btn-form-cropRight .contained-Lt, .upload-focus:focus .contained-Lt {
   margin-left: 0px;
 }
-.base-btn .contained-Rt, .base-btn-login .contained-Rt, .base-btn-form .contained-Rt, .base-btn-form-cropLeft .contained-Rt, .base-btn-form-cropRight .contained-Rt {
+.base-btn .contained-Rt, .base-btn-login .contained-Rt, .base-btn-form .contained-Rt, .base-btn-form-cropLeft .contained-Rt, .base-btn-form-cropRight .contained-Rt, .upload-focus:focus .contained-Rt {
   margin-right: 0px;
+}
+
+.upload-focus:focus {
+  border-color: #51ef63;
+  box-shadow: 0 0 0 0.2rem rgba(81, 239, 99, 0.5);
 }
 
 .header {
@@ -12560,6 +12565,11 @@ p.card-text {
   }
 }
 
+.search__label,
+.search__input {
+  font-size: 14px;
+}
+
 .menu {
   background-color: #fff;
   position: absolute;
@@ -12715,7 +12725,7 @@ p.card-text {
 .profile__form-uploadLabel input[type=file] {
   display: none;
 }
-.profile__form-dummy, .profile__form-deleteDummy, .profile__form-dummyReverse {
+.profile__form-dummy, .profile__form-deleteDummy, .profile__form-dummyReverseDelete, .profile__form-dummyDelete, .profile__form-dummyReverse {
   display: block;
   height: 0px;
   z-index: 99;
@@ -12725,6 +12735,13 @@ p.card-text {
 .profile__form-dummyReverse {
   height: 336px;
   animation: reverseAnimateMenu 250ms linear forwards;
+}
+.profile__form-dummyDelete {
+  animation: animateDeleteMenu 250ms linear forwards;
+}
+.profile__form-dummyReverseDelete {
+  height: 152px;
+  animation: reverseAnimateDeleteMenu 250ms linear forwards;
 }
 .profile__form-hide {
   display: none;
@@ -12773,6 +12790,21 @@ p.card-text {
   left: 10px;
   opacity: 0;
   animation: animateLabels 250ms linear 400ms forwards;
+}
+.profile__form-pwSpan {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.profile__form-pwSpan i {
+  color: #fff;
+  font-size: 16px;
+  cursor: pointer;
+  transition: color 500ms ease-out;
+}
+.profile__form-pwSpan i:hover {
+  color: #212529;
 }
 .profile__form-uploadSection {
   display: flex;
@@ -12845,14 +12877,6 @@ p.card-text {
     height: 336px;
   }
 }
-@keyframes animateDeleteMenu {
-  0% {
-    height: 0px;
-  }
-  100% {
-    height: 137px;
-  }
-}
 @keyframes reverseAnimateMenu {
   0% {
     height: 336px;
@@ -12861,9 +12885,17 @@ p.card-text {
     height: 0px;
   }
 }
+@keyframes animateDeleteMenu {
+  0% {
+    height: 0px;
+  }
+  100% {
+    height: 152px;
+  }
+}
 @keyframes reverseAnimateDeleteMenu {
   0% {
-    height: 137px;
+    height: 152px;
   }
   100% {
     height: 0px;
@@ -12935,6 +12967,13 @@ p.card-text {
   justify-content: flex-end;
   align-items: center;
 }
+.sort__labels {
+  background-color: #acc4bc;
+  color: #212121;
+}
+.sort__labels:hover {
+  background-color: #c9d3cc;
+}
 
 .toast {
   position: fixed;
@@ -12979,6 +13018,25 @@ p.card-text {
   color: white;
 }
 
+.spinner {
+  border: 10px solid #bdc3c7;
+  margin: auto;
+  width: 50px;
+  height: 50px;
+  border-top-color: #1abc9c;
+  border-bottom-color: #3498db;
+  border-radius: 50%;
+  animation: spin 1.5s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
 .layout-left {
   margin-left: 2rem;
 }

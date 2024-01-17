@@ -20,6 +20,7 @@ import { addBook } from '../redux/slices/wishSlice.js';
 import { addReadBook } from '../redux/slices/readSlice.js';
 import { updateTabs } from '../redux/slices/tabsSlice.js';
 import useWindowWidth from '../hooks/indexHooks.js';
+import FetchLoader from './FetchLoader.jsx';
 
 const FetchedData = () => {
 	const title = useSelector(state => state.title.value);
@@ -47,6 +48,7 @@ const FetchedData = () => {
 				dispatch(updateFetchedData(parsedArr));
 			})
 			.catch(error => {
+				dispatch(updateTitle("Loading data..."));
 				dispatch(
 					updateToast(toastObjFactory('warning', 'Server not responding'))
 				);
@@ -130,7 +132,9 @@ const FetchedData = () => {
 			
 				<div className="row">	
 					{fetchedData.length === 0 ? (
-						<p>Loading...</p>
+						
+							<FetchLoader />
+			
 					) : (
 						fetchedData.map((book, idx) => (
 							<div

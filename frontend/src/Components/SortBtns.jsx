@@ -41,7 +41,7 @@ const Sort = ({wish, read}) => {
 	
 
 	return (
-		<div className=" mt-4 sort" >
+		<search className=" mt-4 sort" >
 			<div className="dropdown">
 				<button
 					className="btn btn-secondary btn-sm dropdown-toggle"
@@ -67,7 +67,7 @@ const Sort = ({wish, read}) => {
 										onClick={e => handleSort(e)}
 									></button>
 									<label
-										className={`btn btn-sm bg-colour-light-${idx + 1}`}
+										className={`btn btn-sm sort__labels`}
 										htmlFor={title + idx}
 									>
 										{title}
@@ -78,7 +78,7 @@ const Sort = ({wish, read}) => {
 					</div>
 				</ul>
 			</div>
-		</div>
+		</search>
 	);
 };
 
