@@ -3,9 +3,10 @@ import ProfileHeader from './ProfileHeader.jsx';
 import ProfileImg from './ProfileImg.jsx';
 import ProfileLogOut from './ProfileLogOut.jsx';
 import ProfileFooter from './ProfileFooter.jsx';
-import ToggleBtn from './ProfileToggleBtns.jsx';
+import MenuBtn from './MenuBtn.jsx';
+import { managePasswordFormData, deleteAccountFormData } from '../Config/formData.js';
 
-const Profile = ({ btnActive }) => {
+const MenuProfile = ({ btnActive }) => {
 	const { username, imgUrl } = useSelector(state => state.login);
 	const hrStyles = {
 		height: '2px',
@@ -28,7 +29,7 @@ const Profile = ({ btnActive }) => {
 					<div className="profile__text">
 						<p>Manage Password</p>
 					</div>
-					<ToggleBtn target={"Update"} />
+					<MenuBtn formObj={managePasswordFormData} />
 				</div>
 				<hr style={hrStyles} />
 				<div className="profile__menu">
@@ -36,7 +37,7 @@ const Profile = ({ btnActive }) => {
 						<p>Manage Account</p>
 					</div>
 					<ProfileLogOut username={username} />
-					<ToggleBtn target={"Delete"} />
+					<MenuBtn formObj={deleteAccountFormData} />
 				</div>
 				<br />
 			</div>
@@ -45,4 +46,4 @@ const Profile = ({ btnActive }) => {
 	);
 };
 
-export default Profile;
+export default MenuProfile;

@@ -12725,7 +12725,7 @@ p.card-text {
 .profile__form-uploadLabel input[type=file] {
   display: none;
 }
-.profile__form-dummy, .profile__form-deleteDummy, .profile__form-dummyReverseDelete, .profile__form-dummyDelete, .profile__form-dummyReverse {
+.profile__form-dummy, .profile__form-deleteDummy, .profile__form-dummyReverseSignUp, .profile__form-dummySignUp, .profile__form-dummyReverseLogin, .profile__form-dummyLogin, .profile__form-dummyReverseDelete, .profile__form-dummyDelete, .profile__form-dummyReverse {
   display: block;
   height: 0px;
   z-index: 99;
@@ -12743,6 +12743,20 @@ p.card-text {
   height: 152px;
   animation: reverseAnimateDeleteMenu 250ms linear forwards;
 }
+.profile__form-dummyLogin {
+  animation: animateLoginMenu 250ms linear forwards;
+}
+.profile__form-dummyReverseLogin {
+  height: 250px;
+  animation: reverseAnimateLoginMenu 250ms linear forwards;
+}
+.profile__form-dummySignUp {
+  animation: animateSignUpMenu 250ms linear forwards;
+}
+.profile__form-dummyReverseSignUp {
+  height: 400px;
+  animation: reverseAnimateSignUpMenu 250ms linear forwards;
+}
 .profile__form-hide {
   display: none;
 }
@@ -12755,7 +12769,7 @@ p.card-text {
   justify-content: center;
   display: none;
 }
-.profile__form-pwLabel, .profile__form-deleteLabel, .profile__form-pwLabel2, .profile__form-pwLabel1, .profile__form-pwLabel0 {
+.profile__form-pwLabel, .profile__form-deleteLabel, .profile__form-pwLabel3, .profile__form-pwLabel2, .profile__form-pwLabel1, .profile__form-pwLabel0 {
   width: 100%;
   margin: 0 0 15px 0;
   font-size: 14px;
@@ -12764,7 +12778,7 @@ p.card-text {
   border-radius: 4px;
   opacity: 0;
 }
-.profile__form-pwLabel input.pwInput, .profile__form-deleteLabel input.pwInput, .profile__form-pwLabel2 input.pwInput, .profile__form-pwLabel1 input.pwInput, .profile__form-pwLabel0 input.pwInput {
+.profile__form-pwLabel input.pwInput, .profile__form-deleteLabel input.pwInput, .profile__form-pwLabel3 input.pwInput, .profile__form-pwLabel2 input.pwInput, .profile__form-pwLabel1 input.pwInput, .profile__form-pwLabel0 input.pwInput {
   margin-left: none;
   margin-top: 10px;
   border: none;
@@ -12780,6 +12794,9 @@ p.card-text {
 }
 .profile__form-pwLabel2 {
   animation: animateLabels 250ms linear 300ms forwards;
+}
+.profile__form-pwLabel3 {
+  animation: animateLabels 250ms linear 400ms forwards;
 }
 .profile__form-pwBtn, .profile__form-deleteBtn {
   width: 100%;
@@ -12896,6 +12913,38 @@ p.card-text {
 @keyframes reverseAnimateDeleteMenu {
   0% {
     height: 152px;
+  }
+  100% {
+    height: 0px;
+  }
+}
+@keyframes animateLoginMenu {
+  0% {
+    height: 0px;
+  }
+  100% {
+    height: 250px;
+  }
+}
+@keyframes reverseAnimateLoginMenu {
+  0% {
+    height: 250px;
+  }
+  100% {
+    height: 0px;
+  }
+}
+@keyframes animateSignUpMenu {
+  0% {
+    height: 0px;
+  }
+  100% {
+    height: 400px;
+  }
+}
+@keyframes reverseAnimateSignUpMenu {
+  0% {
+    height: 400px;
   }
   100% {
     height: 0px;

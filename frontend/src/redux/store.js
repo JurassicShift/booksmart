@@ -7,7 +7,8 @@ import wishSlice from './slices/wishSlice.js';
 import toastSlice from './slices/toastSlice.js';
 import readSlice from './slices/readSlice.js';
 import tabsSlice from './slices/tabsSlice.js';
-import formSlice from './slices/formActiveSlice.js'
+import formSlice from './slices/formActiveSlice.js';
+import formToggleSlice from './slices/formToggleSlice.js';
 
 export default configureStore({
   reducer: {
@@ -19,6 +20,7 @@ export default configureStore({
     toast: toastSlice,
     read: readSlice,
     tabs: tabsSlice,
-    form: formSlice
+    form: formSlice,
+    formToggle: formToggleSlice
   }
 })

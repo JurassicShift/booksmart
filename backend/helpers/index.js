@@ -49,7 +49,7 @@ urlSwitch.bookGenres = [
 	'Adventure',
 	'Historical Fiction',
 	'Dystopian',
-	'Young Adult',
+	'Teenage',
 	'Science',
 	'Philosophy',
 	'Classics',

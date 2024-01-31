@@ -82,6 +82,7 @@ const postSignup = async (req, res) => {
 	if (data.userpass === data.userconfirm) {
 		try {
 			const user = new User(userdata);
+
 			const userStatus = await user.save();
 			if (userStatus) {
 				req.session.isAuthenticated = true;

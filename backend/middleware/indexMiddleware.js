@@ -31,7 +31,6 @@ const { cloudinary } = require('../../cloudinaryConfig.js');
   };
 
   const isAuthenticated = (req, res, next) => {
-    
     if (req.session.isAuthenticated && req.session.user_id) {
       next(); 
     } else {

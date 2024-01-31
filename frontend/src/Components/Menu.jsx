@@ -1,12 +1,13 @@
-import LoginForm from './LoginForm.jsx';
-import Profile from './Profile.jsx';
+
+import MenuLogin from './MenuLogin.jsx'
+import MenuProfile from './MenuProfile.jsx';
 
 const Menu = ({activeLogin, btnLogin}) => {
     return (
         activeLogin ? (
-            <Profile btnActive={btnLogin} />
+            <MenuProfile btnActive={btnLogin} />
         ) : (
-            <LoginForm active={btnLogin} />
+            <MenuLogin active={btnLogin} />
         )
     )
 }
