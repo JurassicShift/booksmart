@@ -1,16 +1,14 @@
-
-
-import {  useDispatch } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import ReactStars from 'react-rating-stars-component';
 import { updateRating } from '../redux/slices/readSlice';
-import { fetcher, toastObjFactory  } from '../helpers/indexHelpers';
-import { updateToast } from '../redux/slices/toastSlice';
+import { fetcher } from '../helpers/indexHelpers';
+import { useToast } from '../hooks/indexHooks.js';
 
 
 const Stars = ({ starValue, bookid }) => {
 
 	const dispatch = useDispatch();
-
+	const callToast = useToast();
 
 	const ratingChanged = newRating => {
 		const url = `postrating/${bookid}/${newRating}`;
@@ -22,15 +20,11 @@ const Stars = ({ starValue, bookid }) => {
 		.then(response => {
 			const r = response.obj;
 			dispatch(updateRating(ratingData));
-			dispatch(
-				updateToast(toastObjFactory('success', `${r.title} rated ${r.rating} stars!`))
-			);
+			callToast('success', `${r.title} rated ${r.rating} stars!`)
 		} 
 		)
 		.catch(error => {
-			dispatch(
-				updateToast(toastObjFactory('warning', `Something went wrong: ${error}`))
-			);
+			callToast('warning', `Something went wrong: ${error.message}`);
 		})
 		
 		

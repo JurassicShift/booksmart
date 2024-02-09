@@ -306,7 +306,7 @@ const postUpdatePw = async (req, res) => {
 const deleteAc = async (req, res) => {
 	const { confirm, username } = req.body;
 	const userId = req.session.user_id;
-
+console.log(`hit controler with: confirm: ${confirm}, username: ${username} and userId ${userId}`)
 	const documentDeletor = async (collection, array) => {
 		const deletedDocuments = [];
 		for (const refId of array) {

@@ -9,24 +9,24 @@ import {
 import {
 	bookObjFactory,
 	fetcher,
-	toastObjFactory,
 	capitalizer,
 	dateProducer,
 	gridSpaceSelect,
 	marginFactory
 } from '../helpers/indexHelpers.js';
-import { updateToast } from '../redux/slices/toastSlice.js';
 import { addBook } from '../redux/slices/wishSlice.js';
 import { addReadBook } from '../redux/slices/readSlice.js';
 import { updateTabs } from '../redux/slices/tabsSlice.js';
 import useWindowWidth from '../hooks/indexHooks.js';
 import FetchLoader from './FetchLoader.jsx';
+import { useToast } from '../hooks/indexHooks.js';
 
 const FetchedData = () => {
 	const title = useSelector(state => state.title.value);
 	const fetchedData = useSelector(state => state.category.data);
 	const loggedIn = useSelector(state => state.login.active);
 	const width = useWindowWidth();
+	const callToast = useToast();
 	
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
@@ -49,20 +49,14 @@ const FetchedData = () => {
 			})
 			.catch(error => {
 				dispatch(updateTitle("Loading data..."));
-				dispatch(
-					updateToast(toastObjFactory('warning', 'Server not responding'))
-				);
+				callToast('warning', 'Server not responding')
 			});
-	}, [dispatch, fetchedData]);
+	}, [dispatch, fetchedData, callToast]);
 
 	const handleSelection = e => {
-		if (!loggedIn) {
-			return dispatch(
-				updateToast(
-					toastObjFactory('information', 'Please login or create account')
-				)
-			);
-		}
+
+		if (!loggedIn) return callToast('information', 'Please login or create account')
+		
 		const selectionType = e.target.getAttribute('data-button-type');
 		const bookId = e.target.getAttribute('data-book-id');
 		const bookObj = fetchedData.find(book => book.book_id === bookId);
@@ -91,23 +85,12 @@ const FetchedData = () => {
 						selectionType === 'wish' ? addBook(response.obj) : addReadBook(response.obj)
 					);
 					dispatch(removeDataItem(response.obj.book_id));
-					dispatch(
-						updateToast(
-							toastObjFactory('success', `${bookObj.title} added to wishlist!`)
-						)
-					);
+					callToast('success', `${bookObj.title} added to wishlist!`)
 					dispatch(updateTabs(selectionType === 'wish' ? 1 : 2));
 					return navigate(selectionType === 'wish' ? '/wish' : '/read');
 				})
 				.catch(error => {
-					dispatch(
-						updateToast(
-							toastObjFactory(
-								'warning',
-								`${bookObj.title} failed to hit wishlist!`
-							)
-						)
-					);
+					callToast('warning',`${bookObj.title} failed to hit wishlist!`);
 				});
 		}
 	};

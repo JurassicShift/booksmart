@@ -1,13 +1,13 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import { updateToast } from '../redux/slices/toastSlice';
-import { toastObjFactory } from '../helpers/indexHelpers';
 import { resetUrl, updateUrl } from '../redux/slices/loginSlice';
+import {  useToast } from '../hooks/indexHooks.js';
 
 const ProfileImg = () => {
 	const [dataState, setDataState] = useState(null);
 	const dispatch = useDispatch();
 	const btnFocusRef = useRef();
+	const callToast = useToast();
 
 	const handlePhotoUpload = e => {
 		e.preventDefault();
@@ -25,19 +25,17 @@ const ProfileImg = () => {
 				if (response.ok) {
 					return response.json();
 				} else {
-					dispatch(updateToast(toastObjFactory('warning', `Upload failed!`)));
+					callToast('warning', `Upload failed!`);
 					setDataState(null);
 				}
 			})
 			.then(data => {
 				dispatch(updateUrl(data.obj.userimage.url));
-				dispatch(updateToast(toastObjFactory('success', `Photo updated!`)));
+				callToast('success', `Photo updated!`);
 				setDataState(null);
 			})
 			.catch(error => {
-				dispatch(
-					updateToast(toastObjFactory('warning', `Photo error ${error}!`))
-				);
+				callToast('warning', `Photo error ${error}!`);
 				setDataState(null);
 			});
 	};
@@ -53,15 +51,13 @@ const ProfileImg = () => {
 			.then(response => {
 				if (response.ok) {
 					dispatch(resetUrl());
-					dispatch(updateToast(toastObjFactory('success', `Photo deleted!`)));
+					callToast('success', `Photo deleted!`);
 				} else {
-					dispatch(updateToast(toastObjFactory('warning', `Delete failed!`)));
+					callToast('warning', `Delete failed!`);
 				}
 			})
 			.catch(error => {
-				dispatch(
-					updateToast(toastObjFactory('warning', `Delete error ${error}..!`))
-				);
+				callToast('warning', `Delete error ${error}..!`);
 			});
 	};
 

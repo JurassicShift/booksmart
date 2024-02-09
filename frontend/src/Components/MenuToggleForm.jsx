@@ -4,110 +4,172 @@ import { addBooks } from '../redux/slices/wishSlice.js';
 import { addReadBooks } from '../redux/slices/readSlice.js';
 import { updateLogin } from '../redux/slices/loginSlice.js';
 import { updateBtnLogin } from '../redux/slices/btnLoginSlice.js';
-import { updateToast } from '../redux/slices/toastSlice.js';
-import { updateForm1, updateForm1Dummy, updateForm2, updateForm2Dummy } from '../redux/slices/formToggleSlice.js';
 import {
-	toastObjFactory,
-	errorMsgFactory,
+	updateForm1,
+	updateForm1Dummy,
+	updateForm2,
+	updateForm2Dummy,
+} from '../redux/slices/formToggleSlice.js';
+import {
 	toastMsgFactory,
 	animateDummyClass,
-	reverseAnimateDummyClass
+	reverseAnimateDummyClass,
+	stateParser,
 } from '../helpers/indexHelpers.js';
-import MenuLabelsAndInputs from "./MenuLabelsInputs.jsx"
+import {
+	errorMsgFactory,
+	concatErrors,
+	validations,
+} from '../helpers/validationErrors.js';
+import MenuLabelsAndInputs from './MenuLabelsInputs.jsx';
+import { useLogOut, useToast } from '../hooks/indexHooks.js';
 
-const MenuToggleForm = ({formObj}) => {
-	
-	const formData = formObj;
-	const dispatch = useDispatch();
+const MenuToggleForm = ({ formObj }) => {
+	const { route, method, type, inputs, stateLocation } = formObj;
+
 	const { username } = useSelector(state => state.login);
-	const initialFormState = Object.fromEntries(formObj.inputs.map(input => [input, ""]));
-	const initialDeleteAcFormState = {...initialFormState, username: username};
-    const [loginInputs, setLoginInputs] = useState(formObj.type === "DeleteAccount" ? initialDeleteAcFormState : initialFormState);
+
+	const processLogOut = useLogOut();
+	const callToast = useToast();
+	const dispatch = useDispatch();
+
+
+	const initialFormState = Object.fromEntries(
+		inputs.map(input => [input, { value: '', error: null }])
+	);
+	const initialDeleteAcFormState = {
+		...initialFormState,
+		username: { value: username, error: null },
+	};
+	const [formInputs, setFormInputs] = useState(
+		type === 'DeleteAccount' ? initialDeleteAcFormState : initialFormState
+	);
+
+	const updateField = (key, value, stateField) => {
+		setFormInputs(prevData => ({
+			...prevData,
+			[stateField]: { ...prevData[stateField], [key]: value },
+		}));
+	};
 
 	const fieldUpdater = (value, stateField) => {
-		setLoginInputs(prevData => ({
-			...prevData,
-			[stateField]: value,
-		}));
+		updateField('value', value, stateField);
+	};
+
+	const fieldValidationError = (error, stateField) => {
+		updateField('error', error, stateField);
 	};
 
 	const fieldReseter = (value, arr) => {
 		arr.forEach(field => {
-			setLoginInputs(prevPasswords => ({
-				...prevPasswords,
-				[field]: value,
+			setFormInputs(prevData => ({
+				...prevData,
+				[field]: { ...prevData[field], value },
 			}));
 		});
 	};
 
-	const { form1Open, form1DummyOpen, form2Open, form2DummyOpen} = useSelector(
+	const { form1Open, form1DummyOpen, form2Open, form2DummyOpen } = useSelector(
 		state => state.formToggle
 	);
-	const activeDummy = formObj.stateLocation === 'form1' ? form1DummyOpen : form2DummyOpen;
-	const activeForm = formObj.stateLocation === 'form1' ? form1Open : form2Open;
+	const activeDummy =
+		stateLocation === 'form1' ? form1DummyOpen : form2DummyOpen;
+	const activeForm = stateLocation === 'form1' ? form1Open : form2Open;
 
 	const closeForm = () => {
-		dispatch(formObj.stateLocation === 'form1' ? updateForm1Dummy(null) : updateForm2Dummy(null));
-		dispatch(formObj.stateLocation === 'form1' ? updateForm1(null) : updateForm2(null));
+		dispatch(
+			stateLocation === 'form1'
+				? updateForm1Dummy(null)
+				: updateForm2Dummy(null)
+		);
+		dispatch(stateLocation === 'form1' ? updateForm1(null) : updateForm2(null));
 	};
 
 	const updateUserBooks = bookData => {
 		const wishArray = bookData.userwish || [];
-				if(wishArray.length > 0) {
-					dispatch(addBooks(wishArray));
-				}
-				
-				const readArray = bookData.userread || [];
-				if(readArray.length > 0) {
-					dispatch(addReadBooks(readArray));
-				}
+		if (wishArray.length > 0) {
+			dispatch(addBooks(wishArray));
+		}
+
+		const readArray = bookData.userread || [];
+		if (readArray.length > 0) {
+			dispatch(addReadBooks(readArray));
+		}
+	};
+
+	const processLoginSignUpState = bookData => {
+		const loginData = {
+			active: true,
+			username: bookData.username,
+			imgUrl: bookData.imgUrl,
+		};
+
+		updateUserBooks(bookData);
+		dispatch(updateLogin(loginData));
+		dispatch(updateBtnLogin());
 	}
 
+	const processFetchByType = data => {
+		if (type === 'DeleteAccount') {
+			processLogOut();
+		} else if (type === 'Login' || type === 'SignUp') {
+			processLoginSignUpState(data.obj);
+		} else {
+			dispatch(updateBtnLogin());
+		}
+	}
 
-	const formSubmit = async e => {
-		e.preventDefault();
-		const url = formObj.route;
-		const method = formObj.method;
-		fetch(url, {
+	const formSubmit = async () => {
+		fetch(route, {
 			method: method,
 			credentials: 'include',
 			headers: {
 				Accept: 'application/json',
 				'Content-Type': 'application/json',
 			},
-			body: JSON.stringify(loginInputs),
+			body: JSON.stringify(stateParser(formInputs)),
 		})
 			.then(response => {
-				console.log("response:", response);
 				if (response.ok) {
 					return response.json();
 				} else {
-					throw new Error(errorMsgFactory(formObj.type));
+					throw new Error(errorMsgFactory(type));
 				}
 			})
 			.then(data => {
-				fieldReseter('', formObj.inputs);
-				const loginData = {
-					active: true,
-					username: data.obj.username,
-					imgUrl: data.obj.imgUrl
-				};
-		
-				updateUserBooks(data.obj);
-				dispatch(updateLogin(loginData));
-				dispatch(updateBtnLogin());
-				const toastMsg = toastMsgFactory(data, formObj.type);
-
-				dispatch(updateToast(toastObjFactory('success', toastMsg)));
+				fieldReseter('', inputs);
+				processFetchByType(data);
+				const toastMsg = toastMsgFactory(data, type);
+				callToast("success", toastMsg);
 				return closeForm();
 			})
 			.catch(error => {
-				console.log('fired here:', error);
-				dispatch(
-					updateToast(toastObjFactory('warning', `Error ${error.message}!`))
-				);
+				callToast("warning", error.message);
 			});
-	}
+	};
+
+	const inputWarning = fields => {
+		const stateCopy = { ...formInputs };
+		let errorBool;
+		for (const field in stateCopy) {
+			fields.includes(field) ? (errorBool = true) : (errorBool = false);
+			fieldValidationError(errorBool, field);
+		}
+	};
+
+	const errorsUpdate = validation => {
+		let errorStr = concatErrors(validation.errors);
+		inputWarning(validation.fields);
+		callToast("warning", errorStr);
+	};
+
+	const formValidation = e => {
+		e.preventDefault();
+		const validation = validations(type, stateParser(formInputs));
+		if (validation.valid) return formSubmit();
+
+		return errorsUpdate(validation);
+	};
 
 	const showForm = {
 		display: 'block',
@@ -117,17 +179,16 @@ const MenuToggleForm = ({formObj}) => {
 		display: 'none',
 	};
 
-	const animateDummy = animateDummyClass(formObj.type);
-	const reverseAnimateDummy = reverseAnimateDummyClass(formObj.type);
+	const animateDummy = animateDummyClass(type);
+	const reverseAnimateDummy = reverseAnimateDummyClass(type);
 
-
-    return (
-        <form onSubmit={formSubmit}>
+	return (
+		<form onSubmit={formValidation}>
 			<div
 				className={
-					formObj.type && activeDummy && activeForm
+					type && activeDummy && activeForm
 						? reverseAnimateDummy
-						: formObj.type && activeDummy && !activeForm
+						: type && activeDummy && !activeForm
 						? animateDummy
 						: 'profile__form-hide'
 				}
@@ -135,14 +196,18 @@ const MenuToggleForm = ({formObj}) => {
 			<div
 				className="profile__form-pw"
 				style={
-					formObj.type && activeForm && activeDummy
+					type && activeForm && activeDummy
 						? hideForm
-						: formObj.type && activeForm && !activeDummy
+						: type && activeForm && !activeDummy
 						? showForm
 						: null
 				}
 			>
-                <MenuLabelsAndInputs formObj={formData} fieldUpdater={fieldUpdater} inputState={loginInputs}/>
+				<MenuLabelsAndInputs
+					formObj={formObj}
+					fieldUpdater={fieldUpdater}
+					inputState={formInputs}
+				/>
 				<div className={'profile__form-pwBtn'}>
 					<input
 						className=" base-btn-form"
@@ -152,7 +217,7 @@ const MenuToggleForm = ({formObj}) => {
 				</div>
 			</div>
 		</form>
-    )
-}
+	);
+};
 
 export default MenuToggleForm;

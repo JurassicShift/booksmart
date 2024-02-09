@@ -1,32 +1,18 @@
-import { useDispatch } from 'react-redux';
-import { useLocation, useNavigate } from 'react-router-dom';
-import { updateToast } from '../redux/slices/toastSlice';
-import { toastObjFactory } from '../helpers/indexHelpers';
-import { resetLogin } from '../redux/slices/loginSlice';
-import { updateBtnLogin } from '../redux/slices/btnLoginSlice.js';
-import { resetWish } from '../redux/slices/wishSlice';
-import { resetRead } from '../redux/slices/readSlice';
-import { updateTabs } from '../redux/slices/tabsSlice';
+import { useState } from 'react';
+import { useLogOut, useToast } from "../hooks/indexHooks";
 
 
 const ProfileLogOut = ({username}) => {
 
-    const dispatch = useDispatch();
-    const navigate = useNavigate();
-	const location = useLocation();
+	const logOut = useLogOut();
+	const callToast = useToast();
+	const [exit, setExit] = useState(false);
+ 
+	if(exit) return logOut();
 
     const handleLogOut = () => {
-		dispatch(
-			updateToast(toastObjFactory('information', `Goodbye ${username}`))
-		);
-		dispatch(resetLogin());
-		dispatch(updateBtnLogin());
-		dispatch(resetWish());
-		dispatch(resetRead());
-		if (location.pathname !== '/') {
-			dispatch(updateTabs(0));
-			return navigate('/');
-		}
+		setExit(prev => !prev);
+		callToast('information', `Goodbye ${username}`);
 	};
 
     return (

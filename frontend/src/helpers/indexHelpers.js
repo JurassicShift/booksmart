@@ -124,81 +124,21 @@ export const labelNameFactory = num => {
 	return labelName;
 };
 
-const validationObjFactory = errorArr => {
-	const test = errorArr.length > 0;
 
-	const validationObj = {
-		valid: test ? false : true,
-		errors: test ? errorArr : [],
-	};
-
-	return validationObj;
-};
-
-export const pwValidation = obj => {
-	const errors = [];
-
-	const { current, newpw, confirm } = obj;
-
-	if (!current || !newpw || !confirm) {
-		errors.push({ msg: 'Please complete all fields.' });
-	}
-	if (newpw !== confirm) {
-		errors.push({ msg: "Passwords don't match." });
-	}
-	if (newpw.length < 8 || confirm.length < 8) {
-		errors.push({ msg: 'Passwords must be at least 8 characters.' });
-	}
-
-	const validationObj = validationObjFactory(errors);
-
-	return validationObj;
-};
-
-export const deletePwValidation = pwConfirmation => {
-	const errors = [];
-
-	if (!pwConfirmation) {
-		errors.push({ msg: 'Field cannot be empty.' });
-	}
-
-	if (pwConfirmation.length < 8) {
-		errors.push({ msg: 'Passwords must be at least 8 characters.' });
-	}
-
-	const validationObj = validationObjFactory(errors);
-
-	return validationObj;
-};
-
-export const stringifyErrors = errorArr => {
-	let errorStr;
-
-	errorArr.forEach((error, idx) => {
-		if (idx === 0) {
-			errorStr = error.msg;
-		} else {
-			errorStr += ' ' + error.msg;
-		}
-	});
-
-	return errorStr;
-};
-
-export const errorMsgFactory = formTarget => {
+export const toastMsgFactory = (response, formTarget) => {
 	let msg;
 	switch (formTarget) {
-		case 'Update':
-			msg = 'Password update failed.';
+		case 'UpdatePassword':
+			msg = `Password Updated ${response.obj.username}`;
 			break;
-		case 'Delete':
-			msg = 'Deletion Failed';
+		case 'DeleteAccount':
+			msg = `${response.obj.deletedUser.username}'s account deleted`;
 			break;
 		case 'Login':
-			msg = 'Login Failed';
+			msg = `Welcome back ${response.obj.username}`;
 			break;
 		case 'SignUp':
-			msg = 'Failed to Sign up user';
+			msg = `Welcome ${response.obj.username}`;
 			break;
 		default:
 			msg = 'Something went wrong';
@@ -206,65 +146,52 @@ export const errorMsgFactory = formTarget => {
 	return msg;
 };
 
-export const toastMsgFactory = (response, formTarget) => {
-		let msg;
-		switch (formTarget) {
-			case 'Update':
-				msg = `Password Updated ${response.obj.username}`;
-				break;
-			case 'Delete':
-				msg = `${response.obj.deletedUser.username}'s account deleted`;
-				break;
-			case 'Login':
-				msg = `Welcome back ${response.obj.username}`;
-				break;
-			case 'SignUp':
-				msg = `Welcome ${response.obj.username}`;
-				break;
-			default:
-				msg = 'Something went wrong';
-		}
-		return msg;
-	};
-
-	export const animateDummyClass = formTarget => {
-		let cssClass;
-		switch (formTarget) {
-			case 'Update':
-				cssClass = 'profile__form-dummy';
-				break;
-			case 'Delete':
-				cssClass = 'profile__form-dummyDelete';
-				break;
-			case 'Login':
-				cssClass = 'profile__form-dummyLogin';
-				break;
-			case 'SignUp':
-				cssClass = `profile__form-dummySignUp`;
-				break;
-			default:
-				cssClass = 'profile__form-dummy';
-		}
-		return cssClass;
+export const animateDummyClass = formTarget => {
+	let cssClass;
+	switch (formTarget) {
+		case 'Update':
+			cssClass = 'profile__form-dummy';
+			break;
+		case 'Delete':
+			cssClass = 'profile__form-dummyDelete';
+			break;
+		case 'Login':
+			cssClass = 'profile__form-dummyLogin';
+			break;
+		case 'SignUp':
+			cssClass = `profile__form-dummySignUp`;
+			break;
+		default:
+			cssClass = 'profile__form-dummy';
 	}
+	return cssClass;
+};
 
-	export const reverseAnimateDummyClass = formTarget => {
-		let cssClass;
-		switch (formTarget) {
-			case 'Update':
-				cssClass = 'profile__form-dummyReverse';
-				break;
-			case 'Delete':
-				cssClass = 'profile__form-dummyReverseDelete';
-				break;
-			case 'Login':
-				cssClass = 'profile__form-dummyReverseLogin';
-				break;
-			case 'SignUp':
-				cssClass = `profile__form-dummyReverseSignUp`;
-				break;
-			default:
-				cssClass = 'profile__form-dummyReverse';
-		}
-		return cssClass;
+export const reverseAnimateDummyClass = formTarget => {
+	let cssClass;
+	switch (formTarget) {
+		case 'Update':
+			cssClass = 'profile__form-dummyReverse';
+			break;
+		case 'Delete':
+			cssClass = 'profile__form-dummyReverseDelete';
+			break;
+		case 'Login':
+			cssClass = 'profile__form-dummyReverseLogin';
+			break;
+		case 'SignUp':
+			cssClass = `profile__form-dummyReverseSignUp`;
+			break;
+		default:
+			cssClass = 'profile__form-dummyReverse';
 	}
+	return cssClass;
+};
+
+export const stateParser = state => {
+	const obj = {};
+	for(let key in state) {
+		obj[key] = state[key].value
+	}
+	return obj;
+}

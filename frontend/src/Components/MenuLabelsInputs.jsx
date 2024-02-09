@@ -1,6 +1,5 @@
 const LabelsAndInputs = ({formObj, fieldUpdater, inputState}) => {
 
-
     const revealInputContent = (ev) => {
 		const inputElement = ev.currentTarget.nextSibling;
 		const type = inputElement.type;
@@ -8,6 +7,7 @@ const LabelsAndInputs = ({formObj, fieldUpdater, inputState}) => {
 	}
 
     return (
+        
         formObj.inputs.map((field, idx) => {
             return (
                 <label
@@ -20,9 +20,10 @@ const LabelsAndInputs = ({formObj, fieldUpdater, inputState}) => {
                         className="pwInput form-control"
                         type={field === 'username' || field === 'useremail' ? "text" : "password"}
                         name={field}
-                        value={inputState[field]}
+                        data-input-warning={inputState[field].error}
+                        value={inputState[field].value}
                         onChange={e => fieldUpdater(e.target.value, field)}
-                        required
+                    
                     ></input>
                 </label>
             );

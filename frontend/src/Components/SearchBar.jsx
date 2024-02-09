@@ -7,12 +7,13 @@ import {
 	updateActive,
 } from '../redux/slices/searchCategorySlice.js';
 import { updateTitle } from '../redux/slices/titleSlice.js';
-import { updateToast } from '../redux/slices/toastSlice.js';
 import { updateTabs } from '../redux/slices/tabsSlice.js';
-import { toastObjFactory, bookObjFactory } from '../helpers/indexHelpers.js';
+import {  bookObjFactory } from '../helpers/indexHelpers.js';
+import { useToast } from '../hooks/indexHooks.js';
 
 const SearchBar = () => {
 	const dispatch = useDispatch();
+	const callToast = useToast();
 	const searchCategory = useSelector(state => state.category.category);
 	const isActive = useSelector(state => state.category.active);
 	const tab = useSelector(state => state.tabs);
@@ -52,7 +53,7 @@ const SearchBar = () => {
 				return navigate('/');
 			}
 		} catch (error) {
-			dispatch(updateToast(toastObjFactory('warning', `${error.message}`)));
+			callToast('warning', `${error.message}`);
 		}
 	};
 
