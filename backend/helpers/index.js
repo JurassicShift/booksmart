@@ -1,3 +1,27 @@
+const customError = (msg, statusCode) => {
+	const error = new Error(msg);
+	error.statusCode = statusCode;
+	return error;
+}
+
+const dataObjFactory = (msg, obj) => ({msg, obj});
+
+const returnObjFactory = (msg, obj) => ({
+	status: 201,
+	data: dataObjFactory(msg, obj)
+})
+
+const tryCatchDecorator = (fn) => {
+	return async (req, res) => {
+		try {
+			const result= await fn(req, res);
+			return res.status(result.status).send(result.data);
+		} catch (e) {
+			return res.status(500).send(dataObjFactory(`Error: ${e.message}`, e));
+		}
+	}
+	
+}
 
 
 const urlSwitch = (category, terms) => {
@@ -76,5 +100,9 @@ urlSwitch.bookGenres = [
 ];
 
 module.exports = {
-    urlSwitch
+    urlSwitch,
+	tryCatchDecorator,
+	returnObjFactory,
+	dataObjFactory,
+	customError
 }
