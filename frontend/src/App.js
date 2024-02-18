@@ -19,7 +19,8 @@ function App() {
 	const toast = useSelector(state => state.toast);
 	const wish = useSelector(state => state.wish.data);
 	const read = useSelector(state => state.read.data);
-	
+	const fetchedData = useSelector(state => state.category.data);
+
 		const toastProps = {
 		active: toast.active,
 		notice: toast.notice,
@@ -45,7 +46,7 @@ function App() {
 							<div className="app__data">
 								<div className="app__data-container">
 								<Routes>
-									<Route path="/" element={<FetchedData />}></Route>
+									<Route path="/" element={<FetchedData fetchedData={fetchedData}/>}></Route>
 									<Route
 										path="/wish"
 										element={<WishReadData list="Wish" bookData={wish} />}

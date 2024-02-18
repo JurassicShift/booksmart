@@ -12,7 +12,7 @@ import {
 	capitalizer,
 	dateProducer,
 	gridSpaceSelect,
-	marginFactory
+	marginFactory,
 } from '../helpers/indexHelpers.js';
 import { addBook } from '../redux/slices/wishSlice.js';
 import { addReadBook } from '../redux/slices/readSlice.js';
@@ -21,42 +21,59 @@ import useWindowWidth from '../hooks/indexHooks.js';
 import FetchLoader from './FetchLoader.jsx';
 import { useToast } from '../hooks/indexHooks.js';
 
-const FetchedData = () => {
+const FetchedData = ({ fetchedData }) => {
 	const title = useSelector(state => state.title.value);
-	const fetchedData = useSelector(state => state.category.data);
+	// const fetchedData = useSelector(state => state.category.data);
 	const loggedIn = useSelector(state => state.login.active);
+	const searchTitle = useSelector(state => state.title.value);
 	const width = useWindowWidth();
 	const callToast = useToast();
-	
+
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
 
 	useEffect(() => {
-		if (fetchedData.length > 0) {
+		if (fetchedData.length === 10) {
 			return;
 		}
-		fetcher('data', 'GET')
-			.then(response => {
+
+		const fetchData = async () => {
+			try {
+				const queryParams = new URLSearchParams({
+					searchTerms: searchTitle,
+					searchCategory: searchTitle,
+				});
+
+				const base = 'data';
+				const url = fetchedData.length === 9 ? `${base}?${queryParams}` : base;
+
+				const response = await fetcher(url, 'GET');
+
 				if (!response.obj.data || !response.obj.title) {
 					throw new Error();
 				}
-				const objToArr = response.obj.data.items || [];
-				const parsedArr = objToArr.map(book => bookObjFactory(book));
 
+				const objToArr = response.obj.data.items || [];
+				const parsedArr =
+					fetchedData.length === 9
+						? [bookObjFactory(objToArr[0])]
+						: objToArr.map(book => bookObjFactory(book));
 				const genre = response.obj.title;
 				dispatch(updateTitle(genre.genre));
 				dispatch(updateFetchedData(parsedArr));
-			})
-			.catch(error => {
-				dispatch(updateTitle("Loading data..."));
-				callToast('warning', 'Server not responding')
-			});
-	}, [dispatch, fetchedData, callToast]);
+			} catch (e) {
+				console.log(`ERROR: ${e}, ERROR MESSAGE: ${e.message}`);
+				dispatch(updateTitle('Loading data...'));
+				callToast('warning', 'Server not responding');
+			}
+		};
+		fetchData();
+	}, [dispatch, fetchedData, callToast, searchTitle]);
 
 	const handleSelection = e => {
+		if (!loggedIn)
+			return callToast('information', 'Please login or create account');
 
-		if (!loggedIn) return callToast('information', 'Please login or create account')
-		
 		const selectionType = e.target.getAttribute('data-button-type');
 		const bookId = e.target.getAttribute('data-book-id');
 		const bookObj = fetchedData.find(book => book.book_id === bookId);
@@ -82,15 +99,17 @@ const FetchedData = () => {
 						throw new Error();
 					}
 					dispatch(
-						selectionType === 'wish' ? addBook(response.obj) : addReadBook(response.obj)
+						selectionType === 'wish'
+							? addBook(response.obj)
+							: addReadBook(response.obj)
 					);
 					dispatch(removeDataItem(response.obj.book_id));
-					callToast('success', `${bookObj.title} added to wishlist!`)
+					callToast('success', `${bookObj.title} added to wishlist!`);
 					dispatch(updateTabs(selectionType === 'wish' ? 1 : 2));
 					return navigate(selectionType === 'wish' ? '/wish' : '/read');
 				})
 				.catch(error => {
-					callToast('warning',`${bookObj.title} failed to hit wishlist!`);
+					callToast('warning', `${bookObj.title} failed to hit wishlist!`);
 				});
 		}
 	};
@@ -107,17 +126,14 @@ const FetchedData = () => {
 
 	const arrLength = fetchedData.length;
 	const gridSpace = gridSpaceSelect(width);
-	
+
 	return (
 		<>
-		<p className="mb-3 app__font-title">{capitalizer(title)}</p>
+			<p className="mb-3 app__font-title">{capitalizer(title)}</p>
 			<div className="text-dark data__window container">
-			
-				<div className="row">	
+				<div className="row">
 					{fetchedData.length === 0 ? (
-						
-							<FetchLoader />
-			
+						<FetchLoader />
 					) : (
 						fetchedData.map((book, idx) => (
 							<div
@@ -127,7 +143,7 @@ const FetchedData = () => {
 							>
 								<div
 									className="data__card bg-colour-light"
-									style={ marginFactory(arrLength, width, idx) }
+									style={marginFactory(arrLength, width, idx)}
 								>
 									{book.thumbnail && book.thumbnail !== '' ? (
 										<img
