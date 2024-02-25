@@ -23,7 +23,6 @@ import { useToast } from '../hooks/indexHooks.js';
 
 const FetchedData = ({ fetchedData }) => {
 	const title = useSelector(state => state.title.value);
-	// const fetchedData = useSelector(state => state.category.data);
 	const loggedIn = useSelector(state => state.login.active);
 	const searchTitle = useSelector(state => state.title.value);
 	const width = useWindowWidth();
@@ -33,7 +32,7 @@ const FetchedData = ({ fetchedData }) => {
 	const dispatch = useDispatch();
 
 	useEffect(() => {
-		if (fetchedData.length === 10) {
+		if (fetchedData.length > 9) {
 			return;
 		}
 

@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import {
 	updateSearchCategory,
-	updateFetchedData,
+	replaceFetchedData,
 	updateActive,
 } from '../redux/slices/searchCategorySlice.js';
 import { updateTitle } from '../redux/slices/titleSlice.js';
@@ -45,7 +45,7 @@ const SearchBar = () => {
 			const objToArr = rawData.obj.data.items || [];
 			const parsedArr = objToArr.map(book => bookObjFactory(book));
 			const title = rawData.obj.title.genre;
-			dispatch(updateFetchedData(parsedArr));
+			dispatch(replaceFetchedData(parsedArr));
 			dispatch(updateTitle(title));
 			e.target.searchTerms.value = null;
 			if (tab !== 0) {

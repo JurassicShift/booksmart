@@ -17,6 +17,9 @@ export const searchCategorySlice = createSlice({
     updateFetchedData: (state, action) => {
       state.data = [...state.data, ...action.payload]
     },
+    replaceFetchedData: (state, action) => {
+      state.data = action.payload
+    },
     removeDataItem: (state, action) => {
       state.data = state.data.filter(item => item.book_id !== action.payload)
     }
@@ -24,6 +27,6 @@ export const searchCategorySlice = createSlice({
 })
 
 
-export const { updateSearchCategory, updateActive, updateFetchedData, removeDataItem } = searchCategorySlice.actions;
+export const { updateSearchCategory, updateActive, updateFetchedData, replaceFetchedData, removeDataItem } = searchCategorySlice.actions;
 
 export default searchCategorySlice.reducer;

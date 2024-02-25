@@ -2,66 +2,65 @@ const customError = (msg, statusCode) => {
 	const error = new Error(msg);
 	error.statusCode = statusCode;
 	return error;
-}
+};
 
-const dataObjFactory = (msg, obj) => ({msg, obj});
+const dataObjFactory = (msg, obj) => ({ msg, obj });
 
 const returnObjFactory = (msg, obj) => ({
 	status: 201,
-	data: dataObjFactory(msg, obj)
-})
+	data: dataObjFactory(msg, obj),
+});
 
-const tryCatchDecorator = (fn) => {
+const tryCatchDecorator = fn => {
 	return async (req, res) => {
 		try {
-			const result= await fn(req, res);
+			const result = await fn(req, res);
 			return res.status(result.status).send(result.data);
 		} catch (e) {
 			return res.status(500).send(dataObjFactory(`Error: ${e.message}`, e));
 		}
-	}
-	
-}
-
+	};
+};
 
 const urlSwitch = (category, terms) => {
-
 	const apiKey = process.env.BOOKS_API_KEY;
 	const key = `&key=${apiKey}`;
-	
+
 	const genre =
 		urlSwitch.bookGenres[
 			Math.floor(Math.random() * urlSwitch.bookGenres.length - 1)
 		];
 
-    let url;
+	const categoryTest = cat => {
+	 let test =	cat === 'genre' || cat === 'title' || cat === 'author' ? true : false;
+	 return test;
+	};
+
+	let searchTerms = categoryTest(category) ? terms + key : genre + key;
+	
+	let searchField;
 	switch (category) {
 		case 'genre':
-			url = `https://www.googleapis.com/books/v1/volumes?q=subject:${
-				terms + key
-			}`;
+			searchField = 'subject';
 			break;
 		case 'title':
-			url = `https://www.googleapis.com/books/v1/volumes?q=intitle:${
-				terms + key
-			}`;
+			searchField = 'intitle';
 			break;
 		case 'author':
-			url = `https://www.googleapis.com/books/v1/volumes?q=inauthor:${
-				terms + key
-			}`;
-      break;
+			searchField = 'inauthor';
+			break;
 		default:
-			url = `https://www.googleapis.com/books/v1/volumes?q=subject:${
-				genre + key
-			}`;
+			searchField = 'subject';
 	}
+
+	let url = `https://www.googleapis.com/books/v1/volumes?q=${searchField}:${searchTerms}`;
+
 	const combinedData = {
 		url: url,
-		genre: genre
-	}
-    return combinedData;
-}
+		genre: genre,
+	};
+	return combinedData;
+};
 
 urlSwitch.bookGenres = [
 	'Sci-Fi',
@@ -100,9 +99,9 @@ urlSwitch.bookGenres = [
 ];
 
 module.exports = {
-    urlSwitch,
+	urlSwitch,
 	tryCatchDecorator,
 	returnObjFactory,
 	dataObjFactory,
-	customError
-}
+	customError,
+};
