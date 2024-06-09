@@ -1,40 +1,42 @@
-const axios = require('axios');
+const axios = require("axios");
 const {
 	urlSwitch,
 	tryCatchDecorator,
 	returnObjFactory,
 	dataObjFactory,
-} = require('../helpers/index');
-const User = require('../models/user');
-const Wish = require('../models/wish');
-const Read = require('../models/read');
-const { cloudinary } = require('../../cloudinaryConfig.js');
-const bcrypt = require('bcryptjs');
+} = require("../helpers/index");
+const User = require("../models/user");
+const Wish = require("../models/wish");
+const Read = require("../models/read");
+const { cloudinary } = require("../../cloudinaryConfig.js");
+const bcrypt = require("bcryptjs");
 
 const getBookData = tryCatchDecorator(async (req, res) => {
-	const searchTerms = req.query.searchTerms || '';
-	const searchCategory = req.query.searchCategory || '';
+	const searchTerms = req.query.searchTerms || "";
+	const searchCategory = req.query.searchCategory || "";
+	const timesSearched = req.query.timesSearched || 0;
+	console.log("hit getbookdata with: ", req.query);
+	let data = urlSwitch(searchCategory, searchTerms, timesSearched);
 
-	let data = urlSwitch(searchCategory, searchTerms);
 	let url = data.url;
 	let genre = data.genre;
-
+	console.log("url", url, "genre:", genre);
 	const response = await axios({
-		method: 'get',
+		method: "get",
 		url: url,
 	});
 	if (response.status === 200) {
 		const rawData = response.data;
-		const titleData = { genre: searchCategory === '' ? genre : searchTerms };
+		const titleData = { genre: searchCategory === "" ? genre : searchTerms };
 		const combinedData = {
 			data: rawData,
 			title: titleData,
 		};
-		return returnObjFactory('Data fetched', combinedData);
+		return returnObjFactory("Data fetched", combinedData);
 	} else {
 		return res
 			.status(400)
-			.send(dataObjFactory('Data not found. Try again', {}));
+			.send(dataObjFactory("Data not found. Try again", {}));
 	}
 });
 
@@ -42,22 +44,22 @@ const postLogin = tryCatchDecorator(async (req, res) => {
 	const { username, userpass } = req.body;
 	const foundUser = await User.findAndValidate(username, userpass);
 	if (foundUser) {
-		const userWishes = await foundUser.populate('userwish');
-		const userReads = await foundUser.populate('userread');
+		const userWishes = await foundUser.populate("userwish");
+		const userReads = await foundUser.populate("userread");
 		req.session.isAuthenticated = true;
 		req.session.user_id = foundUser.id;
 		const returnObj = {
 			username: foundUser.username,
 			active: true,
-			imgUrl: foundUser.userimage?.url ?? '',
+			imgUrl: foundUser.userimage?.url ?? "",
 			userwish: userWishes?.userwish ?? [],
 			userread: userReads?.userread ?? [],
 		};
-		return returnObjFactory('Login Complete', returnObj);
+		return returnObjFactory("Login Complete", returnObj);
 	} else {
 		return res
 			.status(401)
-			.send(dataObjFactory('User not found. Try again', {}));
+			.send(dataObjFactory("User not found. Try again", {}));
 	}
 });
 
@@ -75,13 +77,13 @@ const postSignup = tryCatchDecorator(async (req, res) => {
 		const returnObj = {
 			username: userStatus.username,
 			active: true,
-			imgUrl: userStatus.userimage?.url ?? '',
+			imgUrl: userStatus.userimage?.url ?? "",
 		};
-		return returnObjFactory('Signup Complete', returnObj);
+		return returnObjFactory("Signup Complete", returnObj);
 	} else {
 		return res
 			.status(401)
-			.send(dataObjFactory('User not found. Try again.', {}));
+			.send(dataObjFactory("User not found. Try again.", {}));
 	}
 });
 
@@ -91,18 +93,20 @@ const postWish = tryCatchDecorator(async (req, res) => {
 	if (data) {
 		const user = await User.findById(userId);
 		if (!user) {
-			return res.status(404).send(dataObjFactory('User not found. Try again.', {}));
+			return res
+				.status(404)
+				.send(dataObjFactory("User not found. Try again.", {}));
 		}
 
 		const wish = new Wish(data);
 		await wish.save();
 		user.userwish.push(wish);
 		await user.save();
-		return returnObjFactory('Added To Wish list', wish);
+		return returnObjFactory("Added To Wish list", wish);
 	} else {
 		return res
 			.status(401)
-			.send(dataObjFactory('Invalid data in request body ', {}));
+			.send(dataObjFactory("Invalid data in request body ", {}));
 	}
 });
 
@@ -113,7 +117,7 @@ const postRead = tryCatchDecorator(async (req, res) => {
 	if (data) {
 		const user = await User.findById(userId);
 		if (!user) {
-			return res.status(404).send(dataObjFactory('User not found', {}));
+			return res.status(404).send(dataObjFactory("User not found", {}));
 		}
 
 		const read = new Read(data);
@@ -125,11 +129,11 @@ const postRead = tryCatchDecorator(async (req, res) => {
 		}
 		await user.save();
 		const deletedItem = await Wish.findByIdAndDelete(data._id);
-		return returnObjFactory('Added to Read list', read);
+		return returnObjFactory("Added to Read list", read);
 	} else {
 		return res
 			.status(401)
-			.send(dataObjFactory('Invalid data in request body ', {}));
+			.send(dataObjFactory("Invalid data in request body ", {}));
 	}
 });
 
@@ -143,30 +147,34 @@ const postRating = tryCatchDecorator(async (req, res) => {
 			{ rating: rating },
 			{ new: true }
 		);
-		return returnObjFactory('Rating Updated', updatedItem);
+		return returnObjFactory("Rating Updated", updatedItem);
 	} else {
-		return res.status(401).send(dataObjFactory('Invalid data in request body ', {}));
+		return res
+			.status(401)
+			.send(dataObjFactory("Invalid data in request body ", {}));
 	}
 });
 
 const deleteBook = tryCatchDecorator(async (req, res) => {
 	const { id, list } = req.params;
 	const userId = req.session.user_id;
-	const pullObj = list === 'Wish' ? { userwish: id } : { userread: id };
+	const pullObj = list === "Wish" ? { userwish: id } : { userread: id };
 
 	if (id && userId) {
 		let deletedItem;
 		deletedItem =
-			list === 'Wish'
+			list === "Wish"
 				? await Wish.findByIdAndDelete(id)
 				: await Read.findByIdAndDelete(id);
 		const deletedUserItem = await User.updateOne(
 			{ _id: userId },
 			{ $pull: pullObj }
 		);
-		return returnObjFactory('Item Deleted', deletedItem);
+		return returnObjFactory("Item Deleted", deletedItem);
 	} else {
-		return res.status(401).send(dataObjFactory('Invalid data in request body ', {}));
+		return res
+			.status(401)
+			.send(dataObjFactory("Invalid data in request body ", {}));
 	}
 });
 
@@ -190,9 +198,11 @@ const postPhoto = tryCatchDecorator(async (req, res) => {
 			{ new: true }
 		);
 
-		return returnObjFactory('Image Updated', updatedItem);
+		return returnObjFactory("Image Updated", updatedItem);
 	} else {
-		return res.status(401).send(dataObjFactory('Invalid data in request body ', {}));
+		return res
+			.status(401)
+			.send(dataObjFactory("Invalid data in request body ", {}));
 	}
 });
 
@@ -204,12 +214,14 @@ const deletePhoto = tryCatchDecorator(async (req, res) => {
 		if (userObj.userimage.url && userObj.userimage.filename) {
 			await cloudinary.uploader.destroy(userObj.userimage.filename);
 		}
-		userObj.userimage.url = '';
-		userObj.userimage.filename = '';
+		userObj.userimage.url = "";
+		userObj.userimage.filename = "";
 		await userObj.save();
-		return returnObjFactory('Image Deleted', userObj);
+		return returnObjFactory("Image Deleted", userObj);
 	} else {
-		return res.status(401).send(dataObjFactory('Invalid data in request body ', {}));
+		return res
+			.status(401)
+			.send(dataObjFactory("Invalid data in request body ", {}));
 	}
 });
 
@@ -225,15 +237,17 @@ const postUpdatePw = tryCatchDecorator(async (req, res) => {
 			if (isMatch) {
 				userObj.userpass = newpw;
 				await userObj.save();
-				return returnObjFactory('Password Updated', userObj);
+				return returnObjFactory("Password Updated", userObj);
 			} else {
 				return res
 					.status(401)
-					.send(dataObjFactory('Check Password and try again', {}));
+					.send(dataObjFactory("Check Password and try again", {}));
 			}
 		}
 	} else {
-		return res.status(401).send(dataObjFactory('Invalid data in request body ', {}));
+		return res
+			.status(401)
+			.send(dataObjFactory("Invalid data in request body ", {}));
 	}
 });
 
@@ -274,15 +288,18 @@ const deleteAc = tryCatchDecorator(async (req, res) => {
 			}
 
 			returnObj.deletedUser = deletedUser;
-			
-			return returnObjFactory('Account Deleted', returnObj);
+
+			return returnObjFactory("Account Deleted", returnObj);
 		} else {
-	
 			returnObj.deletedUser = deletedUser;
-			return res.status(401).send(dataObjFactory('Deletion Failed ', returnObj));
+			return res
+				.status(401)
+				.send(dataObjFactory("Deletion Failed ", returnObj));
 		}
 	} else {
-		return res.status(401).send(dataObjFactory('Invalid data in request body ', {}));
+		return res
+			.status(401)
+			.send(dataObjFactory("Invalid data in request body ", {}));
 	}
 });
 

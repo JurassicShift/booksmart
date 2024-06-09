@@ -22,80 +22,81 @@ const tryCatchDecorator = fn => {
 	};
 };
 
-const urlSwitch = (category, terms) => {
+const urlSwitch = (category, terms, times) => {
 	const apiKey = process.env.BOOKS_API_KEY;
-	const key = `&key=${apiKey}`;
-
+	const startIdx = times !== 0 ? times + 5 : 0;
+	const key = `&startIndex=${times}&key=${apiKey}`;
 	const genre =
 		urlSwitch.bookGenres[
 			Math.floor(Math.random() * urlSwitch.bookGenres.length - 1)
 		];
 
 	const categoryTest = cat => {
-	 let test =	cat === 'genre' || cat === 'title' || cat === 'author' ? true : false;
-	 return test;
+		let test =
+			cat === "genre" || cat === "title" || cat === "author" ? true : false;
+		return test;
 	};
 
 	let searchTerms = categoryTest(category) ? terms + key : genre + key;
-	
+
 	let searchField;
 	switch (category) {
-		case 'genre':
-			searchField = 'subject';
+		case "genre":
+			searchField = "subject";
 			break;
-		case 'title':
-			searchField = 'intitle';
+		case "title":
+			searchField = "intitle";
 			break;
-		case 'author':
-			searchField = 'inauthor';
+		case "author":
+			searchField = "inauthor";
 			break;
 		default:
-			searchField = 'subject';
+			searchField = "subject";
 	}
 
 	let url = `https://www.googleapis.com/books/v1/volumes?q=${searchField}:${searchTerms}`;
 
-	const combinedData = {
-		url: url,
-		genre: genre,
-	};
+	const combinedData = {};
+	combinedData.url = url;
+	combinedData.genre = genre;
+
 	return combinedData;
 };
 
 urlSwitch.bookGenres = [
-	'Sci-Fi',
-	'Fantasy',
-	'Mystery',
-	'Romance',
-	'Horror',
-	'Thriller',
-	'Adventure',
-	'Historical Fiction',
-	'Dystopian',
-	'Teenage',
-	'Science',
-	'Philosophy',
-	'Classics',
-	'Biography',
-	'Self-Help',
-	'Humor',
-	'Crime',
-	'Non-Fiction',
-	'Poetry',
-	'Memoir',
-	'History',
-	'Politics',
-	'Social Sciences',
-	'Psychology',
-	'Economics',
-	'Sociology',
-	'Anthropology',
-	'True Crime',
-	'Self-Improvement',
-	'Cooking',
-	'Health',
-	'Fitness',
-	'Travel',
+	"Sci-Fi",
+	"Fantasy",
+	"Mystery",
+	"Romance",
+	"Horror",
+	"Thriller",
+	"Adventure",
+	"Historical Fiction",
+	"Dystopian",
+	"Teenage",
+	"Science",
+	"Philosophy",
+	"Classics",
+	"Biography",
+	"Self-Help",
+	"Humor",
+	"Crime",
+	"Non-Fiction",
+	"Poetry",
+	"Memoir",
+	"History",
+	"Politics",
+	"Social Sciences",
+	"Psychology",
+	"Economics",
+	"Sociology",
+	"Anthropology",
+	"True Crime",
+	"Self-Improvement",
+	"Cooking",
+	"Health",
+	"Fitness",
+	"Travel",
 ];
 
 module.exports = {

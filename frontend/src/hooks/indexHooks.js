@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { updateToast } from '../redux/slices/toastSlice.js';
 import { toastObjFactory } from '../helpers/indexHelpers.js';
@@ -8,7 +8,7 @@ import { updateBtnLogin } from '../redux/slices/btnLoginSlice.js';
 import { resetWish } from '../redux/slices/wishSlice.js';
 import { resetRead } from '../redux/slices/readSlice.js';
 import { updateTabs } from '../redux/slices/tabsSlice.js';
-
+import { resetCategory } from '../redux/slices/searchCategorySlice.js';
 const getWindowWidth = () => {
     const { innerWidth: width } = window;
 
@@ -41,6 +41,7 @@ export const useLogOut = () => {
     dispatch(updateBtnLogin());
     dispatch(resetWish());
     dispatch(resetRead());
+    dispatch(resetCategory());
     if (location.pathname !== '/') {
         dispatch(updateTabs(0));
         return navigate('/');
