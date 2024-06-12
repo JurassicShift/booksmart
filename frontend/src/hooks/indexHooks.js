@@ -1,60 +1,58 @@
-import { useState, useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { useLocation, useNavigate } from 'react-router-dom';
-import { updateToast } from '../redux/slices/toastSlice.js';
-import { toastObjFactory } from '../helpers/indexHelpers.js';
-import { resetLogin } from '../redux/slices/loginSlice.js';
-import { updateBtnLogin } from '../redux/slices/btnLoginSlice.js';
-import { resetWish } from '../redux/slices/wishSlice.js';
-import { resetRead } from '../redux/slices/readSlice.js';
-import { updateTabs } from '../redux/slices/tabsSlice.js';
-import { resetCategory } from '../redux/slices/searchCategorySlice.js';
-const getWindowWidth = () => {
-    const { innerWidth: width } = window;
+import { useState, useEffect } from "react";
+import { useDispatch } from "react-redux";
+import { useLocation, useNavigate } from "react-router-dom";
+import { updateToast } from "../redux/slices/toastSlice.js";
+import { toastObjFactory } from "../helpers/indexHelpers.js";
+import { resetLogin } from "../redux/slices/loginSlice.js";
+import { updateBtnLogin } from "../redux/slices/btnLoginSlice.js";
+import { resetWish } from "../redux/slices/wishSlice.js";
+import { resetRead } from "../redux/slices/readSlice.js";
+import { resetCategory } from "../redux/slices/searchCategorySlice.js";
 
-    return width;
-}
+const getWindowWidth = () => {
+	const { innerWidth: width } = window;
+
+	return width;
+};
 
 const useWindowWidth = () => {
-    const [windowWidth, setWindowWidth] = useState(getWindowWidth());
+	const [windowWidth, setWindowWidth] = useState(getWindowWidth());
 
-    useEffect(() => {
-        const handleResize = () => {
-            setWindowWidth(getWindowWidth());
-        }
+	useEffect(() => {
+		const handleResize = () => {
+			setWindowWidth(getWindowWidth());
+		};
 
-        window.addEventListener('resize', handleResize);
-        return () => window.removeEventListener('resize', handleResize);
-    }, []);
+		window.addEventListener("resize", handleResize);
+		return () => window.removeEventListener("resize", handleResize);
+	}, []);
 
-    return windowWidth;
-}
+	return windowWidth;
+};
 
 export const useLogOut = () => {
-
-    const dispatch = useDispatch();
-    const navigate = useNavigate();
+	const dispatch = useDispatch();
+	const navigate = useNavigate();
 	const location = useLocation();
 
-    return () => {
-    dispatch(resetLogin());
-    dispatch(updateBtnLogin());
-    dispatch(resetWish());
-    dispatch(resetRead());
-    dispatch(resetCategory());
-    if (location.pathname !== '/') {
-        dispatch(updateTabs(0));
-        return navigate('/');
-    }
-}
-}
+	return () => {
+		dispatch(resetLogin());
+		dispatch(updateBtnLogin());
+		dispatch(resetWish());
+		dispatch(resetRead());
+		dispatch(resetCategory());
+		if (location.pathname !== "/") {
+			return navigate("/");
+		}
+	};
+};
 
 export const useToast = () => {
-    const dispatch = useDispatch();
+	const dispatch = useDispatch();
 
-    return (notification, msg) => {
-        dispatch(updateToast(toastObjFactory(notification, msg)));
-    }
-}
+	return (notification, msg) => {
+		dispatch(updateToast(toastObjFactory(notification, msg)));
+	};
+};
 
 export default useWindowWidth;

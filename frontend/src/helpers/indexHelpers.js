@@ -217,22 +217,13 @@ export function filterToTenBooks(arr) {
 	return arr.filter((_, idx) => !(idx > 9));
 }
 
-// export function checkDuplicateBooks(newBooks, existingBooks, itemOrArray) {
+export function argumentsSelector(book, type) {
+	const newObj = {
+		...book,
+		date: dateProducer(),
+	};
 
-// 	const existingBookIds = new Set(
-// 		existingBooks.map(book => book.book_id | '0')
-// 	);
-
-// 	const newArray = [];
-// 	for (let i = 0; i < newBooks.lengh; i++) {
-// 		if (!existingBookIds.has(newBooks[i].book_id)) {
-// 			if (itemOrArray === 'item') {
-// 				return newBooks[i];
-// 			} else {
-// 				newArray.push(newBooks[i]);
-// 			}
-// 		}
-// 	}
-
-// 	return itemOrArray === 'item' ? null : newArray;
-// }
+	return type === "wish"
+		? ["wishadd", "POST", book]
+		: ["readadd", "POST", newObj];
+}

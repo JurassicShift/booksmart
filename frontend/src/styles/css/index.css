@@ -12580,7 +12580,7 @@ p.card-text {
 }
 @media (min-width: 400px) {
   .menu {
-    top: -12px;
+    top: -20px;
     height: calc(12px + 100%);
   }
 }

@@ -12,7 +12,7 @@
 	cursor: pointer;
 
 	&:hover {
-		background-color: map-get($colour-palette, 'light-2');
+		background-color: map-get($colour-palette, "light-2");
 		color: $dark-text;
 	}
 
@@ -159,7 +159,7 @@ $tab-font-sz: 16px;
 	cursor: pointer;
 	transition: all 500ms;
 	&:hover {
-		background-color: map-get($colour-palette, 'light-1');
+		background-color: map-get($colour-palette, "light-1");
 		color: $my-hov-col;
 	}
 
@@ -182,7 +182,7 @@ $tab-font-sz: 16px;
 		}
 		&-nonActive {
 			@include base-tab();
-			background-color: map-get($colour-palette, 'light');
+			background-color: map-get($colour-palette, "light");
 		}
 	}
 }
@@ -319,7 +319,7 @@ $menu-base-height: 100%;
 
 	@include xs {
 		$menu-top: 12px;
-		top: -12px;
+		top: -20px;
 		height: calc(#{$menu-top} + #{$menu-base-height});
 	}
 
@@ -453,7 +453,7 @@ $combined: calc(#{$element-width} + #{$difference});
 			top: 2px;
 		}
 		&-uploadLabel {
-			input[type='file'] {
+			input[type="file"] {
 				display: none;
 			}
 		}
@@ -522,10 +522,10 @@ $combined: calc(#{$element-width} + #{$difference});
 				width: 100%;
 				height: 23px;
 				transition: border-bottom 200ms ease-in;
-				&[data-input-warning=true] {
+				&[data-input-warning="true"] {
 					border-bottom: 2px solid red;
 				}
-				&[data-input-warning=false] {
+				&[data-input-warning="false"] {
 					border-bottom: 2px solid green;
 				}
 			}
@@ -783,16 +783,13 @@ $combined: calc(#{$element-width} + #{$difference});
 	}
 
 	&__labels {
-		background-color: map-get($colour-palette, 'light-3');
+		background-color: map-get($colour-palette, "light-3");
 		color: $dark-text;
 		// opacity: 0.9;
 		&:hover {
-
-			 background-color: map-get($colour-palette, 'light');
-	
+			background-color: map-get($colour-palette, "light");
 		}
 	}
-	
 }
 
 // ==========================================
@@ -859,9 +856,9 @@ $combined: calc(#{$element-width} + #{$difference});
 
 @keyframes spin {
 	0% {
-	  transform: rotate(0deg);
+		transform: rotate(0deg);
 	}
 	100% {
-	  transform: rotate(360deg);
+		transform: rotate(360deg);
 	}
-  }
+}

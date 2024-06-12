@@ -1,12 +1,12 @@
-import React from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
-import { updateTabs } from '../redux/slices/tabsSlice';
-import { updateToast } from '../redux/slices/toastSlice';
-import { toastObjFactory } from '../helpers/indexHelpers';
+import React from "react";
+import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { updateTabs } from "../redux/slices/tabsSlice";
+import { updateToast } from "../redux/slices/toastSlice";
+import { toastObjFactory } from "../helpers/indexHelpers";
 
 const Tabs = () => {
-	const routes = ['Home', 'Wish', 'Read'];
+	const routes = ["Home", "Wish", "Read"];
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
 	const active = useSelector(state => state.tabs.active);
@@ -22,42 +22,36 @@ const Tabs = () => {
 		if (!login && num !== 0) {
 			return dispatch(
 				updateToast(
-					toastObjFactory('information', `Please login to use ${routes[num]}`)
+					toastObjFactory("information", `Please login to use ${routes[num]}`)
 				)
 			);
 		}
 		dispatch(updateTabs(num));
 		if (num === 0) {
-			return navigate('/');
+			return navigate("/");
 		}
-		navigate('/' + routes[num].toLowerCase());
+		navigate("/" + routes[num].toLowerCase());
 	};
-
 
 	const newTabs = routes.map((route, idx) => {
 		return (
 			<React.Fragment key={`tab-${idx}`}>
-				
-			<div
+				<div
 					className={
 						active === idx
-							? 'card tabs__base-active custom-card'
-							: 'card tabs__base-nonActive custom-card'
+							? "card tabs__base-active custom-card"
+							: "card tabs__base-nonActive custom-card"
 					}
-					onClick={() => handleActive(idx)}
-					
-				>
+					onClick={() => handleActive(idx)}>
 					<div className="card-body ">
 						<p className="card-text">{route}</p>
 					</div>
 				</div>
-				<span className="badge">
-						{listLengths[idx]}
-					</span>
-					</React.Fragment>
+				<span className="badge">{listLengths[idx]}</span>
+			</React.Fragment>
 		);
 	});
-	return newTabs; 
+	return newTabs;
 };
 
 export default Tabs;

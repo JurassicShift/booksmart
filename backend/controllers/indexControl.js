@@ -15,12 +15,12 @@ const getBookData = tryCatchDecorator(async (req, res) => {
 	const searchTerms = req.query.searchTerms || "";
 	const searchCategory = req.query.searchCategory || "";
 	const timesSearched = req.query.timesSearched || 0;
-	console.log("hit getbookdata with: ", req.query);
+
 	let data = urlSwitch(searchCategory, searchTerms, timesSearched);
 
 	let url = data.url;
 	let genre = data.genre;
-	console.log("url", url, "genre:", genre);
+
 	const response = await axios({
 		method: "get",
 		url: url,

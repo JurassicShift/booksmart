@@ -29,8 +29,10 @@ const SearchBar = () => {
 
 	const handleSearch = async e => {
 		e.preventDefault();
+
 		const local = "http://localhost:5000/data";
 		const searchTerms = e.target.searchTerms.value.trim();
+
 		if (searchTerms !== title) {
 			dispatch(resetTimesSearched());
 		}
@@ -39,6 +41,7 @@ const SearchBar = () => {
 			searchCategory: searchCategory,
 			timesSearched: timesSearched,
 		});
+
 		const url = `${local}?${queryParams}`;
 
 		try {
@@ -48,9 +51,17 @@ const SearchBar = () => {
 			}
 
 			const rawData = await response.json();
-			const objToArr = rawData.obj.data.items || [];
-			const parsedArr = objToArr.map(book => bookObjFactory(book));
+			const data = rawData?.obj?.data?.items || [];
+
 			const title = rawData.obj.title.genre;
+
+			if (data.length === 0) {
+				e.target.searchTerms.value = null;
+				throw new Error("Check search terms. No items found");
+			}
+
+			const parsedArr = data.map(book => bookObjFactory(book));
+
 			dispatch(replaceFetchedData(parsedArr));
 			dispatch(updateTitle(title));
 			e.target.searchTerms.value = null;
@@ -59,6 +70,7 @@ const SearchBar = () => {
 				return navigate("/");
 			}
 		} catch (error) {
+			e.target.searchTerms.value = null;
 			callToast("warning", `${error.message}`);
 		}
 	};

@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { updateTitle } from "../redux/slices/titleSlice.js";
@@ -7,16 +7,14 @@ import {
 	removeDataItem,
 } from "../redux/slices/searchCategorySlice.js";
 import {
-	// bookObjFactory,
 	fetcher,
 	capitalizer,
-	dateProducer,
 	gridSpaceSelect,
 	marginFactory,
 	checkDuplicateLists,
 	checkResDataDuplication,
-	// filterToTenBooks,
 	bookObjCreator,
+	argumentsSelector,
 } from "../helpers/indexHelpers.js";
 import { addBook } from "../redux/slices/wishSlice.js";
 import { addReadBook } from "../redux/slices/readSlice.js";
@@ -33,76 +31,88 @@ const FetchedData = ({ homePageBookData = [] }) => {
 	const searchCategory = useSelector(state => state.category.category);
 	const readBookList = useSelector(state => state.read.data);
 	const wishBookList = useSelector(state => state.wish.data);
+	const whichTab = useSelector(state => state.tabs.active);
 	const width = useWindowWidth();
 	const callToast = useToast();
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
+	// const [fireUseEffect, setFireUseEffect] = useState(false);
 
 	useEffect(() => {
-		async function fetchData() {
-			if (homePageBookData.length >= 10) {
-				return;
-			}
+		if (whichTab !== 0) dispatch(updateTabs(0));
+	}, []);
 
-			if (homePageBookData.length === 9) {
-				dispatch(incrementTimesSearched());
-			}
-			try {
-				const queryParams = new URLSearchParams({
-					searchTerms: title,
-					searchCategory: searchCategory,
-					timesSearched: timesSearched,
-				});
-
-				const base = "http://localhost:5000/data";
-				const url =
-					homePageBookData.length === 9 ? `${base}?${queryParams}` : base;
-
-				const response = await fetch(url, {
-					method: "GET",
-					credentials: "include",
-				});
-				if (!response.ok) {
-					throw new Error("Network response not ok in fetchData");
-				}
-				const data = await response.json();
-
-				dispatch(updateTitle(data.obj.title.genre));
-
-				const booksResponseData = data.obj.data.items || [];
-
-				return removeDuplicates(booksResponseData);
-			} catch (e) {
-				console.log(`ERROR MESSAGE: ${e.message}`);
-				dispatch(updateTitle("Loading data..."));
-				callToast("warning", "Server not responding");
-			}
-		}
-
-		function removeDuplicates(responseData) {
-			const parsedBooksResData = bookObjCreator(responseData);
-
-			const existingBookLists = loggedIn
-				? [...homePageBookData, ...readBookList, ...wishBookList]
-				: homePageBookData;
-
-			const uniqueBooksData = checkDuplicateLists(
-				checkResDataDuplication(parsedBooksResData),
-				existingBookLists
-			);
-
-			updateState(uniqueBooksData);
-		}
-
-		function updateState(booksData) {
-			if (!homePageBookData.length || homePageBookData.length < 10) {
-				const count = 10 - homePageBookData.length;
-				const slicedArr = booksData.slice(0, count);
-				return dispatch(updateFetchedData(slicedArr));
-			}
-		}
+	useEffect(() => {
 		fetchData();
 	}, [homePageBookData]);
+
+	async function fetchData() {
+		console.log("hit fetchData!");
+		if (homePageBookData.length >= 10) {
+			return;
+		}
+
+		if (homePageBookData.length === 9) {
+			dispatch(incrementTimesSearched());
+		}
+		try {
+			const queryParams = new URLSearchParams({
+				searchTerms: title,
+				searchCategory: searchCategory,
+				timesSearched: timesSearched,
+			});
+
+			const base = "http://localhost:5000/data";
+			const url =
+				homePageBookData.length === 9 ? `${base}?${queryParams}` : base;
+
+			const response = await fetch(url, {
+				method: "GET",
+				credentials: "include",
+			});
+			if (!response.ok) {
+				throw new Error("Network response not ok in fetchData");
+			}
+
+			const data = await response.json();
+			const booksResponseData = data?.obj?.data?.items || [];
+
+			if (booksResponseData.length === 0) {
+				throw new Error("Check search terms. No items found");
+			}
+
+			dispatch(updateTitle(data?.obj?.title?.genre));
+
+			return removeDuplicates(booksResponseData);
+		} catch (e) {
+			console.log(`ERROR MESSAGE: ${e.message}`);
+			dispatch(updateTitle("Loading data..."));
+			callToast("warning", "Server not responding");
+		}
+	}
+
+	function removeDuplicates(responseData) {
+		const parsedBooksResData = bookObjCreator(responseData);
+
+		const existingBookLists = loggedIn
+			? [...homePageBookData, ...readBookList, ...wishBookList]
+			: homePageBookData;
+
+		const uniqueBooksData = checkDuplicateLists(
+			checkResDataDuplication(parsedBooksResData),
+			existingBookLists
+		);
+
+		updateState(uniqueBooksData);
+	}
+
+	function updateState(booksData) {
+		if (!homePageBookData.length || homePageBookData.length < 10) {
+			const count = 10 - homePageBookData.length;
+			const slicedArr = booksData.slice(0, count);
+			return dispatch(updateFetchedData(slicedArr));
+		}
+	}
 
 	const handleSelection = e => {
 		if (!loggedIn)
@@ -110,22 +120,10 @@ const FetchedData = ({ homePageBookData = [] }) => {
 
 		const selectionType = e.target.getAttribute("data-button-type");
 		const bookId = e.target.getAttribute("data-book-id");
+
 		const bookObj = homePageBookData.find(book => book.book_id === bookId);
 		if (bookObj) {
-			function selector() {
-				const newObj = {
-					...bookObj,
-					date: dateProducer(),
-				};
-				const selected = [];
-				if (selectionType === "wish") {
-					selected.unshift("wishadd", "POST", bookObj);
-				} else {
-					selected.unshift("readadd", "POST", newObj);
-				}
-				return selected;
-			}
-			const argumentsArr = selector();
+			const argumentsArr = argumentsSelector(bookObj, selectionType);
 
 			fetcher(...argumentsArr)
 				.then(response => {
@@ -140,6 +138,8 @@ const FetchedData = ({ homePageBookData = [] }) => {
 					dispatch(removeDataItem(response.obj.book_id));
 					callToast("success", `${bookObj.title} added to wishlist!`);
 					dispatch(updateTabs(selectionType === "wish" ? 1 : 2));
+					fetchData();
+					// setFireUseEffect(value => !value);
 					return navigate(selectionType === "wish" ? "/wish" : "/read");
 				})
 				.catch(error => {
